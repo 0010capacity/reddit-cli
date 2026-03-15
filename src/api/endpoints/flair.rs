@@ -88,10 +88,7 @@ impl<'a> FlairEndpoint<'a> {
         css_class: Option<&str>,
         template_id: Option<&str>,
     ) -> Result<()> {
-        let mut form = vec![
-            ("api_type", "json"),
-            ("name", user),
-        ];
+        let mut form = vec![("api_type", "json"), ("name", user)];
 
         if let Some(t) = text {
             form.push(("text", t));
@@ -103,7 +100,8 @@ impl<'a> FlairEndpoint<'a> {
             form.push(("flair_template_id", t));
         }
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated(&format!("/r/{}/api/flair", self.subreddit), &form)
             .await?;
 
@@ -112,12 +110,10 @@ impl<'a> FlairEndpoint<'a> {
 
     /// Delete user flair
     pub async fn delete_user_flair(&self, user: &str) -> Result<()> {
-        let form = vec![
-            ("api_type", "json"),
-            ("name", user),
-        ];
+        let form = vec![("api_type", "json"), ("name", user)];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated(&format!("/r/{}/api/deleteflair", self.subreddit), &form)
             .await?;
 
@@ -155,21 +151,15 @@ impl<'a> FlairEndpoint<'a> {
     }
 
     /// Select flair for user
-    pub async fn select_user_flair(
-        &self,
-        template_id: &str,
-        text: Option<&str>,
-    ) -> Result<()> {
-        let mut form = vec![
-            ("api_type", "json"),
-            ("flair_template_id", template_id),
-        ];
+    pub async fn select_user_flair(&self, template_id: &str, text: Option<&str>) -> Result<()> {
+        let mut form = vec![("api_type", "json"), ("flair_template_id", template_id)];
 
         if let Some(t) = text {
             form.push(("text", t));
         }
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated(&format!("/r/{}/api/selectflair", self.subreddit), &form)
             .await?;
 
@@ -193,7 +183,8 @@ impl<'a> FlairEndpoint<'a> {
             form.push(("text", t));
         }
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated(&format!("/r/{}/api/selectflair", self.subreddit), &form)
             .await?;
 

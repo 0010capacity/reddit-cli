@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const VERSION = '0.1.0';
+const VERSION = '0.1.1';
 const GITHUB_REPO = '0010capacity/reddit-cli';
 
 function getPlatform() {

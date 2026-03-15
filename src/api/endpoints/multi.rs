@@ -69,9 +69,7 @@ impl<'a> MultiEndpoint<'a> {
 
     /// Get user's multis
     pub async fn mine(&self) -> Result<Vec<Multi>> {
-        self.client
-            .get_authenticated("/api/multi/mine")
-            .await
+        self.client.get_authenticated("/api/multi/mine").await
     }
 
     /// Get public multis for a user
@@ -93,9 +91,7 @@ impl<'a> MultiEndpoint<'a> {
         let model = serde_json::to_string(request)?;
         let model_str = model;
 
-        let form = vec![
-            ("model", model_str.as_str()),
-        ];
+        let form = vec![("model", model_str.as_str())];
 
         self.client
             .post_authenticated(&format!("/api/multi/{}", path), &form)
@@ -107,9 +103,7 @@ impl<'a> MultiEndpoint<'a> {
         let model = serde_json::to_string(request)?;
         let model_str = model;
 
-        let form = vec![
-            ("model", model_str.as_str()),
-        ];
+        let form = vec![("model", model_str.as_str())];
 
         self.client
             .put_authenticated(&format!("/api/multi/{}", path), &form)
@@ -118,7 +112,8 @@ impl<'a> MultiEndpoint<'a> {
 
     /// Delete a multi
     pub async fn delete(&self, path: &str) -> Result<()> {
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .delete_authenticated(&format!("/api/multi/{}", path))
             .await?;
 
@@ -127,10 +122,7 @@ impl<'a> MultiEndpoint<'a> {
 
     /// Copy a multi
     pub async fn copy(&self, from: &str, to: &str, display_name: Option<&str>) -> Result<Multi> {
-        let mut form: Vec<(&str, &str)> = vec![
-            ("from", from),
-            ("to", to),
-        ];
+        let mut form: Vec<(&str, &str)> = vec![("from", from), ("to", to)];
 
         if let Some(name) = display_name {
             form.push(("display_name", name));
@@ -148,7 +140,8 @@ impl<'a> MultiEndpoint<'a> {
 
         let form = vec![("model", model_str.as_str())];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .put_authenticated(&format!("/api/multi/{}/r/{}", multi_path, subreddit), &form)
             .await?;
 
@@ -157,7 +150,8 @@ impl<'a> MultiEndpoint<'a> {
 
     /// Remove subreddit from multi
     pub async fn remove_subreddit(&self, multi_path: &str, subreddit: &str) -> Result<()> {
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .delete_authenticated(&format!("/api/multi/{}/r/{}", multi_path, subreddit))
             .await?;
 
@@ -166,7 +160,8 @@ impl<'a> MultiEndpoint<'a> {
 
     /// Get multi description
     pub async fn description(&self, path: &str) -> Result<String> {
-        let result: MultiDescription = self.client
+        let result: MultiDescription = self
+            .client
             .get_authenticated(&format!("/api/multi/{}/description", path))
             .await?;
 
@@ -180,7 +175,8 @@ impl<'a> MultiEndpoint<'a> {
 
         let form = vec![("model", model_str.as_str())];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .put_authenticated(&format!("/api/multi/{}/description", path), &form)
             .await?;
 

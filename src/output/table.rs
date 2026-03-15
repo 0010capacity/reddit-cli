@@ -51,7 +51,10 @@ impl super::Output for TableOutput {
         if let Some(total) = user.total_karma {
             output.push_str(&format!("Total karma: {}\n", total));
         }
-        output.push_str(&format!("Created: {}\n", user.created_utc.format("%Y-%m-%d")));
+        output.push_str(&format!(
+            "Created: {}\n",
+            user.created_utc.format("%Y-%m-%d")
+        ));
 
         output
     }

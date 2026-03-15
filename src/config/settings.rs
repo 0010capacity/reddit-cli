@@ -2,7 +2,7 @@ use anyhow::Result;
 use serde::Deserialize;
 use std::path::PathBuf;
 
-#[derive(Debug, Deserialize, Clone)]
+#[derive(Debug, Deserialize, Clone, Default)]
 pub struct Settings {
     #[serde(default)]
     pub api: ApiSettings,
@@ -125,15 +125,5 @@ impl Settings {
             .unwrap_or_else(|| PathBuf::from("."))
             .join("reddit-cli");
         Ok(config_dir.join("token.json"))
-    }
-}
-
-impl Default for Settings {
-    fn default() -> Self {
-        Self {
-            api: ApiSettings::default(),
-            output: OutputSettings::default(),
-            auth: AuthSettings::default(),
-        }
     }
 }

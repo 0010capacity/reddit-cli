@@ -47,7 +47,9 @@ impl<'a> SubredditEndpoint<'a> {
             query.push(("limit", l.to_string()));
         }
         let query_refs: Vec<(&str, &str)> = query.iter().map(|(k, v)| (*k, v.as_str())).collect();
-        self.client.get_with_query("/subreddits/popular", &query_refs).await
+        self.client
+            .get_with_query("/subreddits/popular", &query_refs)
+            .await
     }
 
     /// Get new subreddits
@@ -57,16 +59,24 @@ impl<'a> SubredditEndpoint<'a> {
             query.push(("limit", l.to_string()));
         }
         let query_refs: Vec<(&str, &str)> = query.iter().map(|(k, v)| (*k, v.as_str())).collect();
-        self.client.get_with_query("/subreddits/new", &query_refs).await
+        self.client
+            .get_with_query("/subreddits/new", &query_refs)
+            .await
     }
 
     /// Search subreddits
-    pub async fn search(&self, query: &str, limit: Option<u32>) -> Result<ListingResponse<Subreddit>> {
+    pub async fn search(
+        &self,
+        query: &str,
+        limit: Option<u32>,
+    ) -> Result<ListingResponse<Subreddit>> {
         let mut params: Vec<(&str, String)> = vec![("q", query.to_string())];
         if let Some(l) = limit {
             params.push(("limit", l.to_string()));
         }
         let query_refs: Vec<(&str, &str)> = params.iter().map(|(k, v)| (*k, v.as_str())).collect();
-        self.client.get_with_query("/subreddits/search", &query_refs).await
+        self.client
+            .get_with_query("/subreddits/search", &query_refs)
+            .await
     }
 }

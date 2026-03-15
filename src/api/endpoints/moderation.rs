@@ -180,10 +180,7 @@ impl<'a> ModerationEndpoint<'a> {
         let spam_str = is_spam.to_string();
         let form = vec![("id", id), ("spam", spam_str.as_str())];
 
-        let _: serde_json::Value = self
-            .client
-            .post_authenticated("/api/remove", &form)
-            .await?;
+        let _: serde_json::Value = self.client.post_authenticated("/api/remove", &form).await?;
 
         Ok(())
     }
@@ -234,10 +231,7 @@ impl<'a> ModerationEndpoint<'a> {
     pub async fn lock(&self, id: &str) -> Result<()> {
         let form = vec![("id", id)];
 
-        let _: serde_json::Value = self
-            .client
-            .post_authenticated("/api/lock", &form)
-            .await?;
+        let _: serde_json::Value = self.client.post_authenticated("/api/lock", &form).await?;
 
         Ok(())
     }
@@ -246,10 +240,7 @@ impl<'a> ModerationEndpoint<'a> {
     pub async fn unlock(&self, id: &str) -> Result<()> {
         let form = vec![("id", id)];
 
-        let _: serde_json::Value = self
-            .client
-            .post_authenticated("/api/unlock", &form)
-            .await?;
+        let _: serde_json::Value = self.client.post_authenticated("/api/unlock", &form).await?;
 
         Ok(())
     }
@@ -304,20 +295,14 @@ impl<'a> ModerationEndpoint<'a> {
 
     /// Report a post or comment
     pub async fn report(&self, id: &str, reason: &str, other_reason: Option<&str>) -> Result<()> {
-        let mut form: Vec<(&str, &str)> = vec![
-            ("api_type", "json"),
-            ("thing_id", id),
-            ("reason", reason),
-        ];
+        let mut form: Vec<(&str, &str)> =
+            vec![("api_type", "json"), ("thing_id", id), ("reason", reason)];
 
         if let Some(other) = other_reason {
             form.push(("other_reason", other));
         }
 
-        let _: serde_json::Value = self
-            .client
-            .post_authenticated("/api/report", &form)
-            .await?;
+        let _: serde_json::Value = self.client.post_authenticated("/api/report", &form).await?;
 
         Ok(())
     }
@@ -434,11 +419,8 @@ impl<'a> UserManagementEndpoint<'a> {
         reason: Option<&str>,
         note: Option<&str>,
     ) -> Result<()> {
-        let mut form: Vec<(&str, &str)> = vec![
-            ("api_type", "json"),
-            ("name", user),
-            ("type", "banned"),
-        ];
+        let mut form: Vec<(&str, &str)> =
+            vec![("api_type", "json"), ("name", user), ("type", "banned")];
 
         let duration_str;
         if let Some(d) = duration {
@@ -462,11 +444,7 @@ impl<'a> UserManagementEndpoint<'a> {
 
     /// Unban a user from a subreddit
     pub async fn unban(&self, subreddit: &str, user: &str) -> Result<()> {
-        let form = vec![
-            ("api_type", "json"),
-            ("name", user),
-            ("type", "banned"),
-        ];
+        let form = vec![("api_type", "json"), ("name", user), ("type", "banned")];
 
         let _: serde_json::Value = self
             .client
@@ -478,11 +456,8 @@ impl<'a> UserManagementEndpoint<'a> {
 
     /// Mute a user in a subreddit
     pub async fn mute(&self, subreddit: &str, user: &str, note: Option<&str>) -> Result<()> {
-        let mut form: Vec<(&str, &str)> = vec![
-            ("api_type", "json"),
-            ("name", user),
-            ("type", "muted"),
-        ];
+        let mut form: Vec<(&str, &str)> =
+            vec![("api_type", "json"), ("name", user), ("type", "muted")];
 
         if let Some(n) = note {
             form.push(("note", n));
@@ -498,11 +473,7 @@ impl<'a> UserManagementEndpoint<'a> {
 
     /// Unmute a user in a subreddit
     pub async fn unmute(&self, subreddit: &str, user: &str) -> Result<()> {
-        let form = vec![
-            ("api_type", "json"),
-            ("name", user),
-            ("type", "muted"),
-        ];
+        let form = vec![("api_type", "json"), ("name", user), ("type", "muted")];
 
         let _: serde_json::Value = self
             .client

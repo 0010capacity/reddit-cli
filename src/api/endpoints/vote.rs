@@ -31,10 +31,7 @@ impl<'a> VoteEndpoint<'a> {
         let dir_str = dir.to_string();
         let form = [("id", id), ("dir", &dir_str)];
 
-        let _: serde_json::Value = self
-            .client
-            .post_authenticated("/api/vote", &form)
-            .await?;
+        let _: serde_json::Value = self.client.post_authenticated("/api/vote", &form).await?;
 
         Ok(())
     }

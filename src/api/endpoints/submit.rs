@@ -100,10 +100,7 @@ impl<'a> SubmitEndpoint<'a> {
         }
 
         // Convert to borrowed form
-        let form_borrowed: Vec<(&str, &str)> = form
-            .iter()
-            .map(|(k, v)| (*k, v.as_str()))
-            .collect();
+        let form_borrowed: Vec<(&str, &str)> = form.iter().map(|(k, v)| (*k, v.as_str())).collect();
 
         self.client
             .post_authenticated("/api/submit", &form_borrowed)
@@ -112,11 +109,7 @@ impl<'a> SubmitEndpoint<'a> {
 
     /// Edit a post or comment
     pub async fn edit(&self, id: &str, text: &str) -> Result<()> {
-        let form = [
-            ("api_type", "json"),
-            ("thing_id", id),
-            ("text", text),
-        ];
+        let form = [("api_type", "json"), ("thing_id", id), ("text", text)];
 
         let _: serde_json::Value = self
             .client
@@ -130,10 +123,7 @@ impl<'a> SubmitEndpoint<'a> {
     pub async fn delete(&self, id: &str) -> Result<()> {
         let form = [("id", id)];
 
-        let _: serde_json::Value = self
-            .client
-            .post_authenticated("/api/del", &form)
-            .await?;
+        let _: serde_json::Value = self.client.post_authenticated("/api/del", &form).await?;
 
         Ok(())
     }

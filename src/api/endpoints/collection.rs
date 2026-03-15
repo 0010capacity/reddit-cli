@@ -50,15 +50,12 @@ impl<'a> CollectionEndpoint<'a> {
         description: Option<&str>,
         display_layout: Option<&str>,
     ) -> Result<Collection> {
-        let mut form: Vec<(&str, &str)> = vec![
-            ("title", title),
-            ("sr_fullname", sr_fullname),
-        ];
+        let mut form: Vec<(&str, &str)> = vec![("title", title), ("sr_fullname", sr_fullname)];
 
-        if let Some(ref desc) = description {
+        if let Some(desc) = description {
             form.push(("description", desc));
         }
-        if let Some(ref layout) = display_layout {
+        if let Some(layout) = display_layout {
             form.push(("display_layout", layout));
         }
 
@@ -71,7 +68,8 @@ impl<'a> CollectionEndpoint<'a> {
     pub async fn delete(&self, collection_id: &str) -> Result<()> {
         let form = vec![("collection_id", collection_id)];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated("/api/v1/collections/delete_collection", &form)
             .await?;
 
@@ -94,8 +92,12 @@ impl<'a> CollectionEndpoint<'a> {
             form.push(("description", d));
         }
 
-        let _: serde_json::Value = self.client
-            .post_authenticated("/api/v1/collections/update_collection_title_and_description", &form)
+        let _: serde_json::Value = self
+            .client
+            .post_authenticated(
+                "/api/v1/collections/update_collection_title_and_description",
+                &form,
+            )
             .await?;
 
         Ok(())
@@ -108,7 +110,8 @@ impl<'a> CollectionEndpoint<'a> {
             ("link_fullname", link_fullname),
         ];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated("/api/v1/collections/add_post_to_collection", &form)
             .await?;
 
@@ -122,7 +125,8 @@ impl<'a> CollectionEndpoint<'a> {
             ("link_fullname", link_fullname),
         ];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated("/api/v1/collections/remove_post_in_collection", &form)
             .await?;
 
@@ -137,7 +141,8 @@ impl<'a> CollectionEndpoint<'a> {
             ("link_ids", &link_ids_json),
         ];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated("/api/v1/collections/reorder_collection", &form)
             .await?;
 
@@ -148,7 +153,8 @@ impl<'a> CollectionEndpoint<'a> {
     pub async fn follow(&self, collection_id: &str) -> Result<()> {
         let form = vec![("collection_id", collection_id)];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated("/api/v1/collections/follow_collection", &form)
             .await?;
 
@@ -159,7 +165,8 @@ impl<'a> CollectionEndpoint<'a> {
     pub async fn unfollow(&self, collection_id: &str) -> Result<()> {
         let form = vec![("collection_id", collection_id)];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated("/api/v1/collections/unfollow_collection", &form)
             .await?;
 

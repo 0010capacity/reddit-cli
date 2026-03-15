@@ -1,7 +1,7 @@
 use reqwest;
 use serde_json::Value;
-use wiremock::{Mock, ResponseTemplate};
 use wiremock::matchers::{method, path};
+use wiremock::{Mock, ResponseTemplate};
 
 #[tokio::test]
 async fn test_hot_posts_endpoint() {

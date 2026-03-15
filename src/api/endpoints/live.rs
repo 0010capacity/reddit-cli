@@ -62,7 +62,8 @@ impl<'a> LiveEndpoint<'a> {
 
     /// Get live thread info
     pub async fn about(&self, thread_id: &str) -> Result<LiveThread> {
-        let result: LiveThreadResponse = self.client
+        let result: LiveThreadResponse = self
+            .client
             .get_authenticated(&format!("/live/{}/about", thread_id))
             .await?;
 
@@ -93,7 +94,8 @@ impl<'a> LiveEndpoint<'a> {
 
     /// Get contributors
     pub async fn contributors(&self, thread_id: &str) -> Result<Vec<LiveContributor>> {
-        let result: LiveContributorsResponse = self.client
+        let result: LiveContributorsResponse = self
+            .client
             .get_authenticated(&format!("/live/{}/contributors", thread_id))
             .await?;
 
@@ -128,11 +130,7 @@ impl<'a> LiveEndpoint<'a> {
         nsfw: bool,
     ) -> Result<LiveThread> {
         let nsfw_str = nsfw.to_string();
-        let mut form = vec![
-            ("api_type", "json"),
-            ("title", title),
-            ("nsfw", &nsfw_str),
-        ];
+        let mut form = vec![("api_type", "json"), ("title", title), ("nsfw", &nsfw_str)];
 
         if let Some(d) = description {
             form.push(("description", d));
@@ -148,10 +146,7 @@ impl<'a> LiveEndpoint<'a> {
 
     /// Post an update to a live thread
     pub async fn update(&self, thread_id: &str, body: &str) -> Result<LiveUpdate> {
-        let form = vec![
-            ("api_type", "json"),
-            ("body", body),
-        ];
+        let form = vec![("api_type", "json"), ("body", body)];
 
         self.client
             .post_authenticated(&format!("/api/live/{}/update", thread_id), &form)
@@ -160,12 +155,10 @@ impl<'a> LiveEndpoint<'a> {
 
     /// Strike (mark incorrect) an update
     pub async fn strike_update(&self, thread_id: &str, update_id: &str) -> Result<()> {
-        let form = vec![
-            ("api_type", "json"),
-            ("id", update_id),
-        ];
+        let form = vec![("api_type", "json"), ("id", update_id)];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated(&format!("/api/live/{}/strike_update", thread_id), &form)
             .await?;
 
@@ -174,12 +167,10 @@ impl<'a> LiveEndpoint<'a> {
 
     /// Delete an update
     pub async fn delete_update(&self, thread_id: &str, update_id: &str) -> Result<()> {
-        let form = vec![
-            ("api_type", "json"),
-            ("id", update_id),
-        ];
+        let form = vec![("api_type", "json"), ("id", update_id)];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated(&format!("/api/live/{}/delete_update", thread_id), &form)
             .await?;
 
@@ -212,7 +203,8 @@ impl<'a> LiveEndpoint<'a> {
             form.push(("nsfw", &nsfw_str));
         }
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated(&format!("/api/live/{}/edit", thread_id), &form)
             .await?;
 
@@ -223,7 +215,8 @@ impl<'a> LiveEndpoint<'a> {
     pub async fn close(&self, thread_id: &str) -> Result<()> {
         let form = vec![("api_type", "json")];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated(&format!("/api/live/{}/close_thread", thread_id), &form)
             .await?;
 
@@ -245,8 +238,12 @@ impl<'a> LiveEndpoint<'a> {
             ("type", "liveupdate_contributor_invite"),
         ];
 
-        let _: serde_json::Value = self.client
-            .post_authenticated(&format!("/api/live/{}/invite_contributor", thread_id), &form)
+        let _: serde_json::Value = self
+            .client
+            .post_authenticated(
+                &format!("/api/live/{}/invite_contributor", thread_id),
+                &form,
+            )
             .await?;
 
         Ok(())

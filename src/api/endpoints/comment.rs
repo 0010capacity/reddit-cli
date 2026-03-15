@@ -48,24 +48,14 @@ impl<'a> CommentEndpoint<'a> {
     ///   - t3_xxx for post (top-level comment)
     ///   - t1_xxx for comment (reply)
     pub async fn submit(&self, parent: &str, text: &str) -> Result<CommentResponse> {
-        let form = [
-            ("api_type", "json"),
-            ("thing_id", parent),
-            ("text", text),
-        ];
+        let form = [("api_type", "json"), ("thing_id", parent), ("text", text)];
 
-        self.client
-            .post_authenticated("/api/comment", &form)
-            .await
+        self.client.post_authenticated("/api/comment", &form).await
     }
 
     /// Edit a comment
     pub async fn edit(&self, id: &str, text: &str) -> Result<()> {
-        let form = [
-            ("api_type", "json"),
-            ("thing_id", id),
-            ("text", text),
-        ];
+        let form = [("api_type", "json"), ("thing_id", id), ("text", text)];
 
         let _: serde_json::Value = self
             .client
@@ -79,10 +69,7 @@ impl<'a> CommentEndpoint<'a> {
     pub async fn delete(&self, id: &str) -> Result<()> {
         let form = [("id", id)];
 
-        let _: serde_json::Value = self
-            .client
-            .post_authenticated("/api/del", &form)
-            .await?;
+        let _: serde_json::Value = self.client.post_authenticated("/api/del", &form).await?;
 
         Ok(())
     }

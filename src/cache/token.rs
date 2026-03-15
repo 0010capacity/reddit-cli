@@ -47,9 +47,9 @@ impl CachedToken {
     /// Save token to cache file
     pub fn save(&self) -> Result<()> {
         let path = Self::token_path()?;
-        let parent = path.parent().ok_or_else(|| {
-            RedditError::Config("Could not determine parent directory".into())
-        })?;
+        let parent = path
+            .parent()
+            .ok_or_else(|| RedditError::Config("Could not determine parent directory".into()))?;
         std::fs::create_dir_all(parent)?;
 
         let content = serde_json::to_string_pretty(self)?;

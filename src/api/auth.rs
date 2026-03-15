@@ -285,8 +285,7 @@ impl OAuthClient {
             let body = response.text().await.unwrap_or_default();
             return Err(RedditError::Auth(format!(
                 "Token exchange failed (HTTP {}): {}",
-                status,
-                body
+                status, body
             )));
         }
 
@@ -306,10 +305,7 @@ impl OAuthClient {
     }
 
     /// Add HTTP Basic Authentication to a request
-    fn add_basic_auth(
-        &self,
-        request: reqwest::RequestBuilder,
-    ) -> reqwest::RequestBuilder {
+    fn add_basic_auth(&self, request: reqwest::RequestBuilder) -> reqwest::RequestBuilder {
         if let Some(secret) = &self.client_secret {
             request.basic_auth(&self.client_id, Some(secret))
         } else {

@@ -177,10 +177,7 @@ impl<'a> MessageEndpoint<'a> {
     pub async fn block(&self, id: &str) -> Result<()> {
         let form = vec![("id", id)];
 
-        let _: serde_json::Value = self
-            .client
-            .post_authenticated("/api/block", &form)
-            .await?;
+        let _: serde_json::Value = self.client.post_authenticated("/api/block", &form).await?;
 
         Ok(())
     }

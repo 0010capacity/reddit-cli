@@ -54,7 +54,9 @@ impl<'a> UserEndpoint<'a> {
             query.push(("after", a.to_string()));
         }
         let query_refs: Vec<(&str, &str)> = query.iter().map(|(k, v)| (*k, v.as_str())).collect();
-        self.client.get_with_query(&format!("/user/{}/submitted", username), &query_refs).await
+        self.client
+            .get_with_query(&format!("/user/{}/submitted", username), &query_refs)
+            .await
     }
 
     /// Get user's comments
@@ -72,26 +74,28 @@ impl<'a> UserEndpoint<'a> {
             query.push(("after", a.to_string()));
         }
         let query_refs: Vec<(&str, &str)> = query.iter().map(|(k, v)| (*k, v.as_str())).collect();
-        self.client.get_with_query(&format!("/user/{}/comments", username), &query_refs).await
+        self.client
+            .get_with_query(&format!("/user/{}/comments", username), &query_refs)
+            .await
     }
 
     /// Get user's overview (posts + comments)
-    pub async fn overview(
-        &self,
-        username: &str,
-        limit: Option<u32>,
-    ) -> Result<serde_json::Value> {
+    pub async fn overview(&self, username: &str, limit: Option<u32>) -> Result<serde_json::Value> {
         let query = if let Some(l) = limit {
             vec![("limit", l.to_string())]
         } else {
             vec![]
         };
         let query_refs: Vec<(&str, &str)> = query.iter().map(|(k, v)| (*k, v.as_str())).collect();
-        self.client.get_with_query(&format!("/user/{}/overview", username), &query_refs).await
+        self.client
+            .get_with_query(&format!("/user/{}/overview", username), &query_refs)
+            .await
     }
 
     /// Get user's trophies
     pub async fn trophies(&self, username: &str) -> Result<TrophyResponse> {
-        self.client.get(&format!("/user/{}/trophies", username)).await
+        self.client
+            .get(&format!("/user/{}/trophies", username))
+            .await
     }
 }

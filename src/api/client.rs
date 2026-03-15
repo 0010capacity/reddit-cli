@@ -1,7 +1,7 @@
 use crate::cache::CachedToken;
 use crate::config::Settings;
 use crate::error::{RedditError, Result};
-use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, ACCEPT_LANGUAGE, USER_AGENT};
+use reqwest::header::{ACCEPT, ACCEPT_LANGUAGE, HeaderMap, HeaderValue, USER_AGENT};
 use std::time::Duration;
 
 pub struct Client {
@@ -22,10 +22,7 @@ impl Client {
             ACCEPT,
             HeaderValue::from_static("application/json, text/plain, */*"),
         );
-        headers.insert(
-            ACCEPT_LANGUAGE,
-            HeaderValue::from_static("en-US,en;q=0.9"),
-        );
+        headers.insert(ACCEPT_LANGUAGE, HeaderValue::from_static("en-US,en;q=0.9"));
 
         let http = reqwest::Client::builder()
             .default_headers(headers)
@@ -55,7 +52,7 @@ impl Client {
         let status = response.status();
         if status == reqwest::StatusCode::FORBIDDEN {
             return Err(RedditError::Auth(
-                "Reddit requires OAuth authentication. Run `reddit auth login` first.".to_string()
+                "Reddit requires OAuth authentication. Run `reddit auth login` first.".to_string(),
             ));
         }
         if status.is_client_error() || status.is_server_error() {
@@ -89,7 +86,7 @@ impl Client {
         let status = response.status();
         if status == reqwest::StatusCode::FORBIDDEN {
             return Err(RedditError::Auth(
-                "Reddit requires OAuth authentication. Run `reddit auth login` first.".to_string()
+                "Reddit requires OAuth authentication. Run `reddit auth login` first.".to_string(),
             ));
         }
         if status.is_client_error() || status.is_server_error() {
@@ -101,10 +98,7 @@ impl Client {
     }
 
     /// Make an authenticated GET request to the OAuth API
-    pub async fn get_authenticated<T: serde::de::DeserializeOwned>(
-        &self,
-        path: &str,
-    ) -> Result<T> {
+    pub async fn get_authenticated<T: serde::de::DeserializeOwned>(&self, path: &str) -> Result<T> {
         let token = self.get_valid_token().await?;
 
         let url = format!("{}{}", self.base_url, path);
@@ -257,12 +251,7 @@ impl Client {
 
         tracing::debug!("DELETE {} (authenticated)", url);
 
-        let response = self
-            .http
-            .delete(&url)
-            .bearer_auth(&token)
-            .send()
-            .await?;
+        let response = self.http.delete(&url).bearer_auth(&token).send().await?;
 
         let status = response.status();
         if status.is_client_error() || status.is_server_error() {

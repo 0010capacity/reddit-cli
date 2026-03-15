@@ -17,17 +17,13 @@ impl<'a> SaveEndpoint<'a> {
         match category {
             Some(cat) => {
                 let form = [("id", id), ("category", cat)];
-                let _: serde_json::Value = self
-                    .client
-                    .post_authenticated("/api/save", &form)
-                    .await?;
+                let _: serde_json::Value =
+                    self.client.post_authenticated("/api/save", &form).await?;
             }
             None => {
                 let form = [("id", id)];
-                let _: serde_json::Value = self
-                    .client
-                    .post_authenticated("/api/save", &form)
-                    .await?;
+                let _: serde_json::Value =
+                    self.client.post_authenticated("/api/save", &form).await?;
             }
         }
 
@@ -38,10 +34,7 @@ impl<'a> SaveEndpoint<'a> {
     pub async fn unsave(&self, id: &str) -> Result<()> {
         let form = [("id", id)];
 
-        let _: serde_json::Value = self
-            .client
-            .post_authenticated("/api/unsave", &form)
-            .await?;
+        let _: serde_json::Value = self.client.post_authenticated("/api/unsave", &form).await?;
 
         Ok(())
     }
@@ -50,10 +43,7 @@ impl<'a> SaveEndpoint<'a> {
     pub async fn hide(&self, id: &str) -> Result<()> {
         let form = [("id", id)];
 
-        let _: serde_json::Value = self
-            .client
-            .post_authenticated("/api/hide", &form)
-            .await?;
+        let _: serde_json::Value = self.client.post_authenticated("/api/hide", &form).await?;
 
         Ok(())
     }
@@ -62,10 +52,7 @@ impl<'a> SaveEndpoint<'a> {
     pub async fn unhide(&self, id: &str) -> Result<()> {
         let form = [("id", id)];
 
-        let _: serde_json::Value = self
-            .client
-            .post_authenticated("/api/unhide", &form)
-            .await?;
+        let _: serde_json::Value = self.client.post_authenticated("/api/unhide", &form).await?;
 
         Ok(())
     }

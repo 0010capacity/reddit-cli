@@ -74,10 +74,7 @@ impl<'a> ModNoteEndpoint<'a> {
         limit: Option<u32>,
     ) -> Result<ModNoteListResponse> {
         let limit_str;
-        let mut query: Vec<(&str, &str)> = vec![
-            ("subreddit", subreddit),
-            ("user", user),
-        ];
+        let mut query: Vec<(&str, &str)> = vec![("subreddit", subreddit), ("user", user)];
 
         if let Some(l) = limit {
             limit_str = l.to_string();
@@ -90,11 +87,7 @@ impl<'a> ModNoteEndpoint<'a> {
     }
 
     /// Get recent mod notes for a subreddit
-    pub async fn recent(
-        &self,
-        subreddit: &str,
-        limit: Option<u32>,
-    ) -> Result<ModNoteListResponse> {
+    pub async fn recent(&self, subreddit: &str, limit: Option<u32>) -> Result<ModNoteListResponse> {
         let limit_str;
         let mut query: Vec<(&str, &str)> = vec![("subreddit", subreddit)];
 
@@ -117,11 +110,8 @@ impl<'a> ModNoteEndpoint<'a> {
         label: Option<ModNoteLabel>,
     ) -> Result<ModNote> {
         let label_str;
-        let mut form: Vec<(&str, &str)> = vec![
-            ("subreddit", subreddit),
-            ("user", user),
-            ("note", note),
-        ];
+        let mut form: Vec<(&str, &str)> =
+            vec![("subreddit", subreddit), ("user", user), ("note", note)];
 
         if let Some(l) = label {
             label_str = l.to_string();
@@ -134,19 +124,15 @@ impl<'a> ModNoteEndpoint<'a> {
     }
 
     /// Delete a mod note
-    pub async fn delete(
-        &self,
-        subreddit: &str,
-        user: &str,
-        note_id: &str,
-    ) -> Result<()> {
+    pub async fn delete(&self, subreddit: &str, user: &str, note_id: &str) -> Result<()> {
         let form = vec![
             ("subreddit", subreddit),
             ("user", user),
             ("note_id", note_id),
         ];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .delete_authenticated_with_body("/api/mod/notes", &form)
             .await?;
 
@@ -155,12 +141,10 @@ impl<'a> ModNoteEndpoint<'a> {
 
     /// Delete all mod notes for a user in a subreddit
     pub async fn delete_all(&self, subreddit: &str, user: &str) -> Result<()> {
-        let form = vec![
-            ("subreddit", subreddit),
-            ("user", user),
-        ];
+        let form = vec![("subreddit", subreddit), ("user", user)];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .delete_authenticated_with_body("/api/mod/notes", &form)
             .await?;
 

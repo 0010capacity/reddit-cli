@@ -169,11 +169,8 @@ impl<'a> ModmailEndpoint<'a> {
         is_author_hidden: Option<bool>,
     ) -> Result<ModmailConversationResponse> {
         let hidden_str;
-        let mut form: Vec<(&str, &str)> = vec![
-            ("body", body),
-            ("subject", subject),
-            ("srName", sr_name),
-        ];
+        let mut form: Vec<(&str, &str)> =
+            vec![("body", body), ("subject", subject), ("srName", sr_name)];
 
         if let Some(t) = to {
             form.push(("to", t));
@@ -206,14 +203,21 @@ impl<'a> ModmailEndpoint<'a> {
         ];
 
         self.client
-            .post_authenticated(&format!("/api/mod/conversations/{}/participant", conversation_id), &form)
+            .post_authenticated(
+                &format!("/api/mod/conversations/{}/participant", conversation_id),
+                &form,
+            )
             .await
     }
 
     /// Archive a modmail conversation
     pub async fn archive(&self, conversation_id: &str) -> Result<()> {
-        let _: serde_json::Value = self.client
-            .post_authenticated_empty(&format!("/api/mod/conversations/{}/archive", conversation_id))
+        let _: serde_json::Value = self
+            .client
+            .post_authenticated_empty(&format!(
+                "/api/mod/conversations/{}/archive",
+                conversation_id
+            ))
             .await?;
 
         Ok(())
@@ -221,8 +225,12 @@ impl<'a> ModmailEndpoint<'a> {
 
     /// Unarchive a modmail conversation
     pub async fn unarchive(&self, conversation_id: &str) -> Result<()> {
-        let _: serde_json::Value = self.client
-            .post_authenticated_empty(&format!("/api/mod/conversations/{}/unarchive", conversation_id))
+        let _: serde_json::Value = self
+            .client
+            .post_authenticated_empty(&format!(
+                "/api/mod/conversations/{}/unarchive",
+                conversation_id
+            ))
             .await?;
 
         Ok(())
@@ -230,8 +238,12 @@ impl<'a> ModmailEndpoint<'a> {
 
     /// Highlight a modmail conversation
     pub async fn highlight(&self, conversation_id: &str) -> Result<()> {
-        let _: serde_json::Value = self.client
-            .post_authenticated_empty(&format!("/api/mod/conversations/{}/highlight", conversation_id))
+        let _: serde_json::Value = self
+            .client
+            .post_authenticated_empty(&format!(
+                "/api/mod/conversations/{}/highlight",
+                conversation_id
+            ))
             .await?;
 
         Ok(())
@@ -239,8 +251,12 @@ impl<'a> ModmailEndpoint<'a> {
 
     /// Remove highlight from a modmail conversation
     pub async fn unhighlight(&self, conversation_id: &str) -> Result<()> {
-        let _: serde_json::Value = self.client
-            .post_authenticated_empty(&format!("/api/mod/conversations/{}/unhighlight", conversation_id))
+        let _: serde_json::Value = self
+            .client
+            .post_authenticated_empty(&format!(
+                "/api/mod/conversations/{}/unhighlight",
+                conversation_id
+            ))
             .await?;
 
         Ok(())
@@ -251,7 +267,8 @@ impl<'a> ModmailEndpoint<'a> {
         let ids = conversation_ids.join(",");
         let form = vec![("ids", ids.as_str())];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated("/api/mod/conversations/read", &form)
             .await?;
 
@@ -263,7 +280,8 @@ impl<'a> ModmailEndpoint<'a> {
         let ids = conversation_ids.join(",");
         let form = vec![("ids", ids.as_str())];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated("/api/mod/conversations/unread", &form)
             .await?;
 
@@ -272,7 +290,8 @@ impl<'a> ModmailEndpoint<'a> {
 
     /// Mute the participant of a modmail conversation
     pub async fn mute(&self, conversation_id: &str) -> Result<()> {
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated_empty(&format!("/api/mod/conversations/{}/mute", conversation_id))
             .await?;
 
@@ -281,8 +300,12 @@ impl<'a> ModmailEndpoint<'a> {
 
     /// Unmute the participant of a modmail conversation
     pub async fn unmute(&self, conversation_id: &str) -> Result<()> {
-        let _: serde_json::Value = self.client
-            .post_authenticated_empty(&format!("/api/mod/conversations/{}/unmute", conversation_id))
+        let _: serde_json::Value = self
+            .client
+            .post_authenticated_empty(&format!(
+                "/api/mod/conversations/{}/unmute",
+                conversation_id
+            ))
             .await?;
 
         Ok(())
@@ -310,8 +333,12 @@ impl<'a> ModmailEndpoint<'a> {
             form.push(("note", n));
         }
 
-        let _: serde_json::Value = self.client
-            .post_authenticated(&format!("/api/mod/conversations/{}/ban", conversation_id), &form)
+        let _: serde_json::Value = self
+            .client
+            .post_authenticated(
+                &format!("/api/mod/conversations/{}/ban", conversation_id),
+                &form,
+            )
             .await?;
 
         Ok(())
@@ -319,7 +346,8 @@ impl<'a> ModmailEndpoint<'a> {
 
     /// Get modmail unsubscribed count
     pub async fn unsubscribed_count(&self) -> Result<u64> {
-        let result: serde_json::Value = self.client
+        let result: serde_json::Value = self
+            .client
             .get_authenticated("/api/mod/conversations/unsubscribed/count")
             .await?;
 

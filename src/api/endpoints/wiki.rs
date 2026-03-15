@@ -76,7 +76,8 @@ impl<'a> WikiEndpoint<'a> {
 
     /// Get wiki page content
     pub async fn page(&self, page: &str) -> Result<WikiPage> {
-        let result: WikiPageResponse = self.client
+        let result: WikiPageResponse = self
+            .client
             .get_authenticated(&format!("/r/{}/wiki/{}", self.subreddit, page))
             .await?;
 
@@ -87,7 +88,8 @@ impl<'a> WikiEndpoint<'a> {
     pub async fn page_revision(&self, page: &str, revision: &str) -> Result<WikiPage> {
         let query = vec![("v", revision)];
 
-        let result: WikiPageResponse = self.client
+        let result: WikiPageResponse = self
+            .client
             .get_authenticated_with_query(&format!("/r/{}/wiki/{}", self.subreddit, page), &query)
             .await?;
 
@@ -109,12 +111,18 @@ impl<'a> WikiEndpoint<'a> {
         };
 
         self.client
-            .get_authenticated_with_query(&format!("/r/{}/wiki/revisions/{}", self.subreddit, page), &query)
+            .get_authenticated_with_query(
+                &format!("/r/{}/wiki/revisions/{}", self.subreddit, page),
+                &query,
+            )
             .await
     }
 
     /// Get recent wiki changes across all pages
-    pub async fn recent_changes(&self, limit: Option<u32>) -> Result<ListingResponse<WikiRevision>> {
+    pub async fn recent_changes(
+        &self,
+        limit: Option<u32>,
+    ) -> Result<ListingResponse<WikiRevision>> {
         let limit_str;
         let query: Vec<(&str, &str)> = if let Some(l) = limit {
             limit_str = l.to_string();
@@ -136,10 +144,7 @@ impl<'a> WikiEndpoint<'a> {
         reason: Option<&str>,
         previous: Option<&str>,
     ) -> Result<()> {
-        let mut form = vec![
-            ("content", content),
-            ("page", page),
-        ];
+        let mut form = vec![("content", content), ("page", page)];
 
         if let Some(r) = reason {
             form.push(("reason", r));
@@ -148,7 +153,8 @@ impl<'a> WikiEndpoint<'a> {
             form.push(("previous", p));
         }
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated(&format!("/r/{}/api/wiki/edit", self.subreddit), &form)
             .await?;
 
@@ -157,12 +163,10 @@ impl<'a> WikiEndpoint<'a> {
 
     /// Hide a wiki revision
     pub async fn hide_revision(&self, page: &str, revision: &str) -> Result<()> {
-        let form = vec![
-            ("page", page),
-            ("revision", revision),
-        ];
+        let form = vec![("page", page), ("revision", revision)];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated(&format!("/r/{}/api/wiki/hide", self.subreddit), &form)
             .await?;
 
@@ -171,12 +175,10 @@ impl<'a> WikiEndpoint<'a> {
 
     /// Revert to a revision
     pub async fn revert(&self, page: &str, revision: &str) -> Result<()> {
-        let form = vec![
-            ("page", page),
-            ("revision", revision),
-        ];
+        let form = vec![("page", page), ("revision", revision)];
 
-        let _: serde_json::Value = self.client
+        let _: serde_json::Value = self
+            .client
             .post_authenticated(&format!("/r/{}/api/wiki/revert", self.subreddit), &form)
             .await?;
 
@@ -185,7 +187,8 @@ impl<'a> WikiEndpoint<'a> {
 
     /// Get wiki page settings
     pub async fn settings(&self, page: &str) -> Result<WikiSettings> {
-        let result: WikiSettingsResponse = self.client
+        let result: WikiSettingsResponse = self
+            .client
             .get_authenticated(&format!("/r/{}/wiki/settings/{}", self.subreddit, page))
             .await?;
 
@@ -193,12 +196,7 @@ impl<'a> WikiEndpoint<'a> {
     }
 
     /// Update wiki page settings
-    pub async fn update_settings(
-        &self,
-        page: &str,
-        perm_level: u8,
-        listed: bool,
-    ) -> Result<()> {
+    pub async fn update_settings(&self, page: &str, perm_level: u8, listed: bool) -> Result<()> {
         let perm_str = perm_level.to_string();
         let listed_str = listed.to_string();
         let form = vec![
@@ -207,8 +205,12 @@ impl<'a> WikiEndpoint<'a> {
             ("listed", &listed_str),
         ];
 
-        let _: serde_json::Value = self.client
-            .post_authenticated(&format!("/r/{}/wiki/settings/{}", self.subreddit, page), &form)
+        let _: serde_json::Value = self
+            .client
+            .post_authenticated(
+                &format!("/r/{}/wiki/settings/{}", self.subreddit, page),
+                &form,
+            )
             .await?;
 
         Ok(())
@@ -216,14 +218,14 @@ impl<'a> WikiEndpoint<'a> {
 
     /// Allow user to edit wiki page
     pub async fn allow_editor(&self, page: &str, user: &str) -> Result<()> {
-        let form = vec![
-            ("act", "add"),
-            ("page", page),
-            ("username", user),
-        ];
+        let form = vec![("act", "add"), ("page", page), ("username", user)];
 
-        let _: serde_json::Value = self.client
-            .post_authenticated(&format!("/r/{}/api/wiki/alloweditor/add", self.subreddit), &form)
+        let _: serde_json::Value = self
+            .client
+            .post_authenticated(
+                &format!("/r/{}/api/wiki/alloweditor/add", self.subreddit),
+                &form,
+            )
             .await?;
 
         Ok(())
@@ -231,14 +233,14 @@ impl<'a> WikiEndpoint<'a> {
 
     /// Remove user's wiki edit permission
     pub async fn disallow_editor(&self, page: &str, user: &str) -> Result<()> {
-        let form = vec![
-            ("act", "del"),
-            ("page", page),
-            ("username", user),
-        ];
+        let form = vec![("act", "del"), ("page", page), ("username", user)];
 
-        let _: serde_json::Value = self.client
-            .post_authenticated(&format!("/r/{}/api/wiki/alloweditor/del", self.subreddit), &form)
+        let _: serde_json::Value = self
+            .client
+            .post_authenticated(
+                &format!("/r/{}/api/wiki/alloweditor/del", self.subreddit),
+                &form,
+            )
             .await?;
 
         Ok(())

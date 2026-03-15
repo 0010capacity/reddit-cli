@@ -46,10 +46,11 @@ impl<'a> AccountEndpoint<'a> {
                     .get_authenticated_with_query("/subreddits/mine/subscriber", &[(k, &v)])
                     .await
             }
-            None => self
-                .client
-                .get_authenticated("/subreddits/mine/subscriber")
-                .await,
+            None => {
+                self.client
+                    .get_authenticated("/subreddits/mine/subscriber")
+                    .await
+            }
         }
     }
 
@@ -63,10 +64,11 @@ impl<'a> AccountEndpoint<'a> {
                     .get_authenticated_with_query("/subreddits/mine/contributor", &[(k, &v)])
                     .await
             }
-            None => self
-                .client
-                .get_authenticated("/subreddits/mine/contributor")
-                .await,
+            None => {
+                self.client
+                    .get_authenticated("/subreddits/mine/contributor")
+                    .await
+            }
         }
     }
 
@@ -80,10 +82,11 @@ impl<'a> AccountEndpoint<'a> {
                     .get_authenticated_with_query("/subreddits/mine/moderator", &[(k, &v)])
                     .await
             }
-            None => self
-                .client
-                .get_authenticated("/subreddits/mine/moderator")
-                .await,
+            None => {
+                self.client
+                    .get_authenticated("/subreddits/mine/moderator")
+                    .await
+            }
         }
     }
 }
