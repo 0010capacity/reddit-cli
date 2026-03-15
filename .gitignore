@@ -22,3 +22,8 @@ credentials.toml
 # Test artifacts
 *.profraw
 *.profdata
+
+
+# Added by cargo
+
+/target

@@ -9,33 +9,33 @@
 ## 체크리스트
 
 ### 3.1 OAuth2 설정
-- [ ] `oauth2` crate 의존성 추가
-- [ ] `src/api/auth.rs` - OAuth2 클라이언트
-- [ ] 로컬 콜백 서버 구현
-- [ ] 브라우저 자동 열기
+- [x] `oauth2` crate 의존성 추가
+- [x] `src/api/auth.rs` - OAuth2 클라이언트
+- [x] 로컬 콜백 서버 구현
+- [x] 브라우저 자동 열기
 
 ### 3.2 토큰 관리
-- [ ] `src/cache/token.rs` - 토큰 저장/로드
-- [ ] 토큰 갱신 로직
-- [ ] 토큰 만료 확인
+- [x] `src/cache/token.rs` - 토큰 저장/로드
+- [x] 토큰 갱신 로직
+- [x] 토큰 만료 확인
 
 ### 3.3 인증 CLI
-- [ ] `reddit auth login` 커맨드
-- [ ] `reddit auth logout` 커맨드
-- [ ] `reddit auth status` 커맨드
-- [ ] `reddit auth refresh` 커맨드
+- [x] `reddit auth login` 커맨드
+- [x] `reddit auth logout` 커맨드
+- [x] `reddit auth status` 커맨드
+- [x] `reddit auth refresh` 커맨드
 
 ### 3.4 내 계정 API
-- [ ] `src/api/endpoints/account.rs` - 계정 API
-- [ ] `reddit me` - 내 정보
-- [ ] `reddit me karma` - 내 카르마
-- [ ] `reddit me preferences` - 내 설정
-- [ ] `reddit me trophies` - 내 트로피
+- [x] `src/api/endpoints/account.rs` - 계정 API
+- [x] `reddit me` - 내 정보
+- [x] `reddit me karma` - 내 카르마
+- [x] `reddit me preferences` - 내 설정
+- [x] `reddit me trophies` - 내 트로피
 
 ### 3.5 내 서브레딧 API
-- [ ] `reddit me subreddits` - 구독한 서브레딧
-- [ ] `reddit me contributor` - 기여자인 서브레딧
-- [ ] `reddit me moderator` - 모더레이터인 서브레딧
+- [x] `reddit me subreddits` - 구독한 서브레딧
+- [x] `reddit me contributor` - 기여자인 서브레딧
+- [x] `reddit me moderator` - 모더레이터인 서브레딧
 
 ---
 

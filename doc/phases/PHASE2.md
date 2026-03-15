@@ -1,6 +1,7 @@
 # Phase 2: 읽기 API
 
 > **목표**: OAuth 없이 사용 가능한 모든 읽기 API 구현
+> **참고**: 2023년부터 Reddit은 모든 API 요청에 OAuth 인증을 요구합니다. Phase 3에서 OAuth 구현 후 API가 작동합니다.
 
 **전제조건**: Phase 1 완료
 
@@ -9,38 +10,38 @@
 ## 체크리스트
 
 ### 2.1 리스트업 API
-- [ ] `src/api/endpoints/mod.rs` 생성
-- [ ] `src/api/endpoints/listing.rs` - hot/new/top/rising/controversial
-- [ ] CLI 커맨드와 연결
-- [ ] 페이지네이션 지원 (--after, --before, --limit)
+- [x] `src/api/endpoints/mod.rs` 생성
+- [x] `src/api/endpoints/listing.rs` - hot/new/top/rising/controversial
+- [x] CLI 커맨드와 연결
+- [x] 페이지네이션 지원 (--after, --before, --limit)
 
 ### 2.2 서브레딧 API
-- [ ] `src/api/endpoints/subreddit.rs` - 서브레딧 정보
-- [ ] 서브레딧 규칙 조회
-- [ ] 사이드바 조회
-- [ ] 서브레딧 목록 (popular, new, search)
+- [x] `src/api/endpoints/subreddit.rs` - 서브레딧 정보
+- [x] 서브레딧 규칙 조회
+- [ ] 사이드바 조회 (미구현)
+- [x] 서브레딧 목록 (popular, new, search)
 
 ### 2.3 게시물 API
-- [ ] `src/api/endpoints/link.rs` - 게시물 조회
-- [ ] 게시물 + 댓글 트리 조회
-- [ ] 게시물 정보 (by id)
-- [ ] 중복 게시물 조회
+- [x] `src/api/endpoints/link.rs` - 게시물 조회
+- [x] 게시물 + 댓글 트리 조회
+- [x] 게시물 정보 (by id)
+- [x] 중복 게시물 조회
 
 ### 2.4 사용자 API
-- [ ] `src/api/endpoints/user.rs` - 사용자 정보
-- [ ] 사용자 게시물/댓글/개요
-- [ ] 사용자 트로피
+- [x] `src/api/endpoints/user.rs` - 사용자 정보
+- [x] 사용자 게시물/댓글/개요
+- [x] 사용자 트로피
 
 ### 2.5 검색 API
-- [ ] `src/api/endpoints/search.rs` - 검색
-- [ ] 전체 검색
-- [ ] 서브레딧 내 검색
+- [x] `src/api/endpoints/search.rs` - 검색
+- [x] 전체 검색
+- [x] 서브레딧 내 검색
 
 ### 2.6 출력 포맷팅
-- [ ] `src/output/mod.rs` 생성
-- [ ] `src/output/table.rs` - 테이블 출력
-- [ ] `src/output/json.rs` - JSON 출력
-- [ ] `src/output/markdown.rs` - 마크다운 렌더링
+- [x] `src/output/mod.rs` 생성
+- [x] `src/output/table.rs` - 테이블 출력
+- [x] `src/output/json.rs` - JSON 출력
+- [ ] `src/output/markdown.rs` - 마크다운 렌더링 (미구현)
 
 ---
 

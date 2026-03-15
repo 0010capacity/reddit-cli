@@ -7,45 +7,45 @@
 ## 체크리스트
 
 ### 1.1 프로젝트 초기화
-- [ ] `cargo init` 실행
-- [ ] `Cargo.toml` 의존성 추가
-- [ ] 기본 디렉토리 구조 생성
-- [ ] `cargo build` 통과
+- [x] `cargo init` 실행
+- [x] `Cargo.toml` 의존성 추가
+- [x] 기본 디렉토리 구조 생성
+- [x] `cargo build` 통과
 
 ### 1.2 CLI 기본 구조 (clap)
-- [ ] `src/cli/mod.rs` 생성
-- [ ] `src/cli/root.rs` - 루트 커맨드 정의
-- [ ] `src/main.rs` - 진입점 연결
-- [ ] `--help`, `--version` 동작 확인
+- [x] `src/cli/mod.rs` 생성
+- [x] `src/cli/root.rs` - 루트 커맨드 정의
+- [x] `src/main.rs` - 진입점 연결
+- [x] `--help`, `--version` 동작 확인
 
 ### 1.3 설정 관리
-- [ ] `src/config/mod.rs` 생성
-- [ ] `src/config/settings.rs` - 설정 구조체
-- [ ] 설정 파일 로드 (`~/.config/reddit-cli/config.toml`)
-- [ ] 기본 설정값 정의
+- [x] `src/config/mod.rs` 생성
+- [x] `src/config/settings.rs` - 설정 구조체
+- [x] 설정 파일 로드 (`~/.config/reddit-cli/config.toml`)
+- [x] 기본 설정값 정의
 
 ### 1.4 HTTP 클라이언트
-- [ ] `src/api/mod.rs` 생성
-- [ ] `src/api/client.rs` - reqwest 래퍼
-- [ ] User-Agent 헤더 설정
-- [ ] 기본 GET 요청 테스트
+- [x] `src/api/mod.rs` 생성
+- [x] `src/api/client.rs` - reqwest 래퍼
+- [x] User-Agent 헤더 설정
+- [ ] 기본 GET 요청 테스트 (Phase 2에서 구현)
 
 ### 1.5 데이터 모델
-- [ ] `src/models/mod.rs` 생성
-- [ ] `src/models/common.rs` - Thing, Listing 타입
-- [ ] `src/models/link.rs` - Link(게시물) 모델
-- [ ] `src/models/comment.rs` - Comment 모델
-- [ ] `src/models/subreddit.rs` - Subreddit 모델
-- [ ] `src/models/user.rs` - User 모델
+- [x] `src/models/mod.rs` 생성
+- [x] `src/models/common.rs` - Thing, Listing 타입
+- [x] `src/models/link.rs` - Link(게시물) 모델
+- [x] `src/models/comment.rs` - Comment 모델
+- [x] `src/models/subreddit.rs` - Subreddit 모델
+- [x] `src/models/user.rs` - User 모델
 
 ### 1.6 에러 처리
-- [ ] `src/error.rs` - 커스텀 에러 타입
-- [ ] thiserror 활용
-- [ ] API 에러 매핑
+- [x] `src/error.rs` - 커스텀 에러 타입
+- [x] thiserror 활용
+- [x] API 에러 매핑
 
 ### 1.7 로깅
-- [ ] tracing 설정
-- [ ] RUST_LOG 환경변수 지원
+- [x] tracing 설정
+- [x] RUST_LOG 환경변수 지원
 
 ---
 
