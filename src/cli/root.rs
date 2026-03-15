@@ -2,6 +2,7 @@ use clap::{Parser, Subcommand};
 use crate::api::Client;
 use crate::api::endpoints::{AccountEndpoint, ListingEndpoint, SubredditEndpoint, UserEndpoint, SearchEndpoint, LinkEndpoint};
 use crate::api::endpoints::{CommentEndpoint, FollowEndpoint, SaveEndpoint, SubmitEndpoint, SubscribeEndpoint, VoteEndpoint, SubmitKind, SubmitOptions};
+use crate::api::endpoints::{MessageEndpoint, MessageFolder, ModerationEndpoint, ModQueueLocation, DistinguishType, UserManagementEndpoint};
 use crate::api::OAuthClient;
 use crate::config::Settings;
 use crate::output::{get_output, OutputFormat};
@@ -173,6 +174,12 @@ pub enum Commands {
         /// Post fullname (t3_xxx)
         id: String,
     },
+    /// Message commands (requires authentication)
+    #[command(subcommand)]
+    Message(MessageCommands),
+    /// Moderation commands (requires authentication)
+    #[command(subcommand)]
+    Mod(ModCommands),
 }
 
 #[derive(Subcommand)]
@@ -284,6 +291,220 @@ pub enum MeCommands {
     Moderator {
         #[arg(short, long, default_value = "25")]
         limit: u32,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum MessageCommands {
+    /// View inbox messages
+    Inbox {
+        #[arg(short, long, default_value = "25")]
+        limit: u32,
+    },
+    /// View unread messages
+    Unread {
+        #[arg(short, long, default_value = "25")]
+        limit: u32,
+    },
+    /// View sent messages
+    Sent {
+        #[arg(short, long, default_value = "25")]
+        limit: u32,
+    },
+    /// Send a private message
+    Send {
+        /// Recipient username (or /r/subreddit for mod mail)
+        #[arg(short, long)]
+        to: String,
+        /// Message subject
+        #[arg(short, long)]
+        subject: String,
+        /// Message body (markdown)
+        #[arg(short, long)]
+        text: String,
+        /// Send as subreddit (for mod mail)
+        #[arg(short = 'r', long)]
+        from: Option<String>,
+    },
+    /// Mark messages as read
+    Read {
+        /// Message IDs (space-separated)
+        ids: Vec<String>,
+    },
+    /// Mark all messages as read
+    ReadAll,
+    /// Mark messages as unread
+    UnreadMsg {
+        /// Message IDs (space-separated)
+        ids: Vec<String>,
+    },
+    /// Delete a message
+    Delete {
+        id: String,
+    },
+    /// Block the sender of a message
+    Block {
+        id: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum ModCommands {
+    /// View reports queue
+    Reports {
+        subreddit: String,
+        #[arg(short, long, default_value = "25")]
+        limit: u32,
+    },
+    /// View spam queue
+    Spam {
+        subreddit: String,
+        #[arg(short, long, default_value = "25")]
+        limit: u32,
+    },
+    /// View mod queue
+    Queue {
+        subreddit: String,
+        #[arg(short, long, default_value = "25")]
+        limit: u32,
+    },
+    /// View unmoderated posts
+    Unmoderated {
+        subreddit: String,
+        #[arg(short, long, default_value = "25")]
+        limit: u32,
+    },
+    /// View edited posts/comments
+    Edited {
+        subreddit: String,
+        #[arg(short, long, default_value = "25")]
+        limit: u32,
+    },
+    /// View mod log
+    Log {
+        subreddit: String,
+        #[arg(short, long, default_value = "25")]
+        limit: u32,
+        /// Filter by moderator
+        #[arg(short, long)]
+        moderator: Option<String>,
+    },
+    /// Approve a post or comment
+    Approve {
+        id: String,
+    },
+    /// Remove a post or comment
+    Remove {
+        id: String,
+        /// Mark as spam
+        #[arg(short, long)]
+        spam: bool,
+    },
+    /// Distinguish a comment as mod
+    Distinguish {
+        id: String,
+        /// Make sticky (for top-level comments)
+        #[arg(short, long)]
+        sticky: bool,
+    },
+    /// Remove mod distinction from a comment
+    Undistinguish {
+        id: String,
+    },
+    /// Sticky a post
+    Sticky {
+        id: String,
+        /// Slot number (1-4)
+        #[arg(short, long)]
+        slot: Option<u8>,
+    },
+    /// Unsticky a post
+    Unsticky {
+        id: String,
+    },
+    /// Lock a post or comment
+    Lock {
+        id: String,
+    },
+    /// Unlock a post or comment
+    Unlock {
+        id: String,
+    },
+    /// Mark post as NSFW
+    Nsfw {
+        id: String,
+    },
+    /// Unmark post as NSFW
+    Unnsfw {
+        id: String,
+    },
+    /// Mark post as spoiler
+    Spoiler {
+        id: String,
+    },
+    /// Unmark post as spoiler
+    Unspoiler {
+        id: String,
+    },
+    /// Report a post or comment
+    Report {
+        id: String,
+        /// Report reason
+        #[arg(short, long)]
+        reason: String,
+    },
+    /// Ban a user from a subreddit
+    Ban {
+        subreddit: String,
+        /// Username
+        #[arg(short, long)]
+        user: String,
+        /// Ban duration in days (None = permanent)
+        #[arg(short, long)]
+        days: Option<u32>,
+        /// Ban reason (visible to user)
+        #[arg(short, long)]
+        reason: Option<String>,
+        /// Mod note (visible to mods only)
+        #[arg(short, long)]
+        note: Option<String>,
+    },
+    /// Unban a user from a subreddit
+    Unban {
+        subreddit: String,
+        #[arg(short, long)]
+        user: String,
+    },
+    /// Mute a user in a subreddit
+    Mute {
+        subreddit: String,
+        #[arg(short, long)]
+        user: String,
+        /// Note (visible to mods)
+        #[arg(short, long)]
+        note: Option<String>,
+    },
+    /// Unmute a user in a subreddit
+    Unmute {
+        subreddit: String,
+        #[arg(short, long)]
+        user: String,
+    },
+    /// List banned users in a subreddit
+    Banned {
+        subreddit: String,
+    },
+    /// List muted users in a subreddit
+    Muted {
+        subreddit: String,
+    },
+    /// List contributors in a subreddit
+    Contributors {
+        subreddit: String,
+    },
+    /// List moderators of a subreddit
+    Mods {
+        subreddit: String,
     },
 }
 
@@ -821,6 +1042,352 @@ impl Cli {
                 crate::api::endpoints::FollowEndpoint::new(&client)
                     .unfollow(id).await?;
                 println!("Unfollowed {}", id);
+            }
+            Commands::Message(cmd) => {
+                ensure_authenticated()?;
+                match cmd {
+                    MessageCommands::Inbox { limit } => {
+                        let listing = MessageEndpoint::new(&client)
+                            .get(MessageFolder::Inbox, Some(*limit), None)
+                            .await?;
+                        println!("=== Inbox ===\n");
+                        if listing.data.children.is_empty() {
+                            println!("No messages.");
+                        } else {
+                            for msg in &listing.data.children {
+                                let m = &msg.data;
+                                let status = if m.is_new { "●" } else { "○" };
+                                let author = m.author.as_deref().unwrap_or("Reddit");
+                                println!("{} [{}] {} - from u/{}", status, m.id, m.subject, author);
+                                if !m.body.is_empty() {
+                                    let preview: String = m.body.chars().take(100).collect();
+                                    println!("   {}", preview);
+                                }
+                                println!();
+                            }
+                        }
+                    }
+                    MessageCommands::Unread { limit } => {
+                        let listing = MessageEndpoint::new(&client)
+                            .get(MessageFolder::Unread, Some(*limit), None)
+                            .await?;
+                        println!("=== Unread Messages ===\n");
+                        if listing.data.children.is_empty() {
+                            println!("No unread messages.");
+                        } else {
+                            for msg in &listing.data.children {
+                                let m = &msg.data;
+                                let author = m.author.as_deref().unwrap_or("Reddit");
+                                println!("[{}] {} - from u/{}", m.id, m.subject, author);
+                                if !m.body.is_empty() {
+                                    let preview: String = m.body.chars().take(100).collect();
+                                    println!("   {}", preview);
+                                }
+                                println!();
+                            }
+                        }
+                    }
+                    MessageCommands::Sent { limit } => {
+                        let listing = MessageEndpoint::new(&client)
+                            .get(MessageFolder::Sent, Some(*limit), None)
+                            .await?;
+                        println!("=== Sent Messages ===\n");
+                        if listing.data.children.is_empty() {
+                            println!("No sent messages.");
+                        } else {
+                            for msg in &listing.data.children {
+                                let m = &msg.data;
+                                println!("[{}] {} - to {}", m.id, m.subject, m.dest);
+                                if !m.body.is_empty() {
+                                    let preview: String = m.body.chars().take(100).collect();
+                                    println!("   {}", preview);
+                                }
+                                println!();
+                            }
+                        }
+                    }
+                    MessageCommands::Send { to, subject, text, from } => {
+                        let result = MessageEndpoint::new(&client)
+                            .compose(to, subject, text, from.as_deref())
+                            .await?;
+                        if result.json.errors.is_empty() {
+                            println!("Message sent to {}", to);
+                        } else {
+                            anyhow::bail!("Failed to send message: {:?}", result.json.errors);
+                        }
+                    }
+                    MessageCommands::Read { ids } => {
+                        let ids: Vec<&str> = ids.iter().map(|s| s.as_str()).collect();
+                        MessageEndpoint::new(&client).read(&ids).await?;
+                        println!("Marked {} message(s) as read", ids.len());
+                    }
+                    MessageCommands::ReadAll => {
+                        MessageEndpoint::new(&client).read_all().await?;
+                        println!("All messages marked as read");
+                    }
+                    MessageCommands::UnreadMsg { ids } => {
+                        let ids: Vec<&str> = ids.iter().map(|s| s.as_str()).collect();
+                        MessageEndpoint::new(&client).unread(&ids).await?;
+                        println!("Marked {} message(s) as unread", ids.len());
+                    }
+                    MessageCommands::Delete { id } => {
+                        MessageEndpoint::new(&client).delete(id).await?;
+                        println!("Message {} deleted", id);
+                    }
+                    MessageCommands::Block { id } => {
+                        MessageEndpoint::new(&client).block(id).await?;
+                        println!("Blocked sender of message {}", id);
+                    }
+                }
+            }
+            Commands::Mod(cmd) => {
+                ensure_authenticated()?;
+                match cmd {
+                    ModCommands::Reports { subreddit, limit } => {
+                        let result = ModerationEndpoint::new(&client)
+                            .get_queue(subreddit, ModQueueLocation::Reports, Some(*limit), None)
+                            .await?;
+                        println!("=== Reports Queue for r/{} ===\n", subreddit);
+                        if let Some(children) = result["data"]["children"].as_array() {
+                            if children.is_empty() {
+                                println!("No reports.");
+                            } else {
+                                for item in children {
+                                    let kind = item["kind"].as_str().unwrap_or("");
+                                    let data = &item["data"];
+                                    let author = data["author"].as_str().unwrap_or("unknown");
+                                    let id = data["id"].as_str().unwrap_or("");
+                                    match kind {
+                                        "t3" => {
+                                            let title = data["title"].as_str().unwrap_or("");
+                                            println!("[POST] {} by u/{} - {}", id, author, title);
+                                        }
+                                        "t1" => {
+                                            let body = data["body"].as_str().unwrap_or("");
+                                            let preview: String = body.chars().take(50).collect();
+                                            println!("[COMMENT] {} by u/{} - {}...", id, author, preview);
+                                        }
+                                        _ => {
+                                            println!("[{}] {} by u/{}", kind, id, author);
+                                        }
+                                    }
+                                    // Show user reports
+                                    if let Some(reports) = data["user_reports"].as_array() {
+                                        for report in reports {
+                                            if let Some(arr) = report.as_array() {
+                                                if arr.len() >= 2 {
+                                                    println!("   User report: {} ({}x)", arr[0], arr[1]);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    ModCommands::Spam { subreddit, limit } => {
+                        let result = ModerationEndpoint::new(&client)
+                            .get_queue(subreddit, ModQueueLocation::Spam, Some(*limit), None)
+                            .await?;
+                        println!("=== Spam Queue for r/{} ===\n", subreddit);
+                        if let Some(children) = result["data"]["children"].as_array() {
+                            println!("{} items in spam queue", children.len());
+                        }
+                    }
+                    ModCommands::Queue { subreddit, limit } => {
+                        let result = ModerationEndpoint::new(&client)
+                            .get_queue(subreddit, ModQueueLocation::Modqueue, Some(*limit), None)
+                            .await?;
+                        println!("=== Mod Queue for r/{} ===\n", subreddit);
+                        if let Some(children) = result["data"]["children"].as_array() {
+                            println!("{} items in mod queue", children.len());
+                        }
+                    }
+                    ModCommands::Unmoderated { subreddit, limit } => {
+                        let result = ModerationEndpoint::new(&client)
+                            .get_queue(subreddit, ModQueueLocation::Unmoderated, Some(*limit), None)
+                            .await?;
+                        println!("=== Unmoderated Posts for r/{} ===\n", subreddit);
+                        if let Some(children) = result["data"]["children"].as_array() {
+                            println!("{} unmoderated items", children.len());
+                        }
+                    }
+                    ModCommands::Edited { subreddit, limit } => {
+                        let result = ModerationEndpoint::new(&client)
+                            .get_queue(subreddit, ModQueueLocation::Edited, Some(*limit), None)
+                            .await?;
+                        println!("=== Edited Items for r/{} ===\n", subreddit);
+                        if let Some(children) = result["data"]["children"].as_array() {
+                            println!("{} edited items", children.len());
+                        }
+                    }
+                    ModCommands::Log { subreddit, limit, moderator } => {
+                        let listing = ModerationEndpoint::new(&client)
+                            .log(subreddit, Some(*limit), moderator.as_deref(), None)
+                            .await?;
+                        println!("=== Mod Log for r/{} ===\n", subreddit);
+                        if listing.data.children.is_empty() {
+                            println!("No mod log entries.");
+                        } else {
+                            for entry in &listing.data.children {
+                                let action = &entry.data;
+                                let time = chrono::DateTime::from_timestamp(action.created_utc as i64, 0)
+                                    .map(|d| d.format("%Y-%m-%d %H:%M").to_string())
+                                    .unwrap_or_else(|| "Unknown".to_string());
+                                println!("[{}] u/{} - {}", time, action.mod_name, action.action);
+                                if let Some(target) = &action.target_title {
+                                    println!("   Target: {}", target);
+                                }
+                                if let Some(author) = &action.target_author {
+                                    println!("   By: u/{}", author);
+                                }
+                            }
+                        }
+                    }
+                    ModCommands::Approve { id } => {
+                        ModerationEndpoint::new(&client).approve(id).await?;
+                        println!("Approved {}", id);
+                    }
+                    ModCommands::Remove { id, spam } => {
+                        ModerationEndpoint::new(&client).remove(id, *spam).await?;
+                        if *spam {
+                            println!("Removed {} as spam", id);
+                        } else {
+                            println!("Removed {}", id);
+                        }
+                    }
+                    ModCommands::Distinguish { id, sticky } => {
+                        ModerationEndpoint::new(&client)
+                            .distinguish(id, DistinguishType::Yes, *sticky)
+                            .await?;
+                        println!("Distinguished {}", id);
+                    }
+                    ModCommands::Undistinguish { id } => {
+                        ModerationEndpoint::new(&client)
+                            .distinguish(id, DistinguishType::No, false)
+                            .await?;
+                        println!("Undistinguished {}", id);
+                    }
+                    ModCommands::Sticky { id, slot } => {
+                        ModerationEndpoint::new(&client).sticky(id, true, *slot).await?;
+                        println!("Stickied {}", id);
+                    }
+                    ModCommands::Unsticky { id } => {
+                        ModerationEndpoint::new(&client).sticky(id, false, None).await?;
+                        println!("Unstickied {}", id);
+                    }
+                    ModCommands::Lock { id } => {
+                        ModerationEndpoint::new(&client).lock(id).await?;
+                        println!("Locked {}", id);
+                    }
+                    ModCommands::Unlock { id } => {
+                        ModerationEndpoint::new(&client).unlock(id).await?;
+                        println!("Unlocked {}", id);
+                    }
+                    ModCommands::Nsfw { id } => {
+                        ModerationEndpoint::new(&client).mark_nsfw(id).await?;
+                        println!("Marked {} as NSFW", id);
+                    }
+                    ModCommands::Unnsfw { id } => {
+                        ModerationEndpoint::new(&client).unmark_nsfw(id).await?;
+                        println!("Unmarked {} as NSFW", id);
+                    }
+                    ModCommands::Spoiler { id } => {
+                        ModerationEndpoint::new(&client).spoiler(id).await?;
+                        println!("Marked {} as spoiler", id);
+                    }
+                    ModCommands::Unspoiler { id } => {
+                        ModerationEndpoint::new(&client).unspoiler(id).await?;
+                        println!("Unmarked {} as spoiler", id);
+                    }
+                    ModCommands::Report { id, reason } => {
+                        ModerationEndpoint::new(&client).report(id, reason, None).await?;
+                        println!("Reported {}: {}", id, reason);
+                    }
+                    ModCommands::Ban { subreddit, user, days, reason, note } => {
+                        UserManagementEndpoint::new(&client)
+                            .ban(subreddit, user, *days, reason.as_deref(), note.as_deref())
+                            .await?;
+                        let duration = days.map(|d| format!("{} days", d)).unwrap_or_else(|| "permanently".to_string());
+                        println!("Banned u/{} {} from r/{}", user, duration, subreddit);
+                    }
+                    ModCommands::Unban { subreddit, user } => {
+                        UserManagementEndpoint::new(&client).unban(subreddit, user).await?;
+                        println!("Unbanned u/{} from r/{}", user, subreddit);
+                    }
+                    ModCommands::Mute { subreddit, user, note } => {
+                        UserManagementEndpoint::new(&client).mute(subreddit, user, note.as_deref()).await?;
+                        println!("Muted u/{} in r/{}", user, subreddit);
+                    }
+                    ModCommands::Unmute { subreddit, user } => {
+                        UserManagementEndpoint::new(&client).unmute(subreddit, user).await?;
+                        println!("Unmuted u/{} in r/{}", user, subreddit);
+                    }
+                    ModCommands::Banned { subreddit } => {
+                        let listing = UserManagementEndpoint::new(&client).banned(subreddit).await?;
+                        println!("=== Banned Users in r/{} ===\n", subreddit);
+                        if listing.data.children.is_empty() {
+                            println!("No banned users.");
+                        } else {
+                            for entry in &listing.data.children {
+                                let user = &entry.data;
+                                let date = chrono::DateTime::from_timestamp(user.date as i64, 0)
+                                    .map(|d| d.format("%Y-%m-%d").to_string())
+                                    .unwrap_or_else(|| "Unknown".to_string());
+                                println!("u/{} - banned on {}", user.name, date);
+                                if let Some(note) = &user.note {
+                                    println!("   Note: {}", note);
+                                }
+                            }
+                        }
+                    }
+                    ModCommands::Muted { subreddit } => {
+                        let listing = UserManagementEndpoint::new(&client).muted(subreddit).await?;
+                        println!("=== Muted Users in r/{} ===\n", subreddit);
+                        if listing.data.children.is_empty() {
+                            println!("No muted users.");
+                        } else {
+                            for entry in &listing.data.children {
+                                let user = &entry.data;
+                                println!("u/{}", user.name);
+                                if let Some(reason) = &user.mute_reason {
+                                    println!("   Reason: {}", reason);
+                                }
+                            }
+                        }
+                    }
+                    ModCommands::Contributors { subreddit } => {
+                        let listing = UserManagementEndpoint::new(&client).contributors(subreddit).await?;
+                        println!("=== Contributors in r/{} ===\n", subreddit);
+                        if listing.data.children.is_empty() {
+                            println!("No contributors.");
+                        } else {
+                            for entry in &listing.data.children {
+                                println!("u/{}", entry.data.name);
+                            }
+                        }
+                    }
+                    ModCommands::Mods { subreddit } => {
+                        let listing = UserManagementEndpoint::new(&client).moderators(subreddit).await?;
+                        println!("=== Moderators of r/{} ===\n", subreddit);
+                        if listing.data.children.is_empty() {
+                            println!("No moderators found.");
+                        } else {
+                            for entry in &listing.data.children {
+                                let mod_info = &entry.data;
+                                let perms = if mod_info.mod_permissions.is_empty() {
+                                    "No permissions".to_string()
+                                } else {
+                                    mod_info.mod_permissions.join(", ")
+                                };
+                                println!("u/{} - {}", mod_info.name, perms);
+                                if let Some(flair) = &mod_info.author_flair_text {
+                                    println!("   Flair: {}", flair);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 

@@ -3,6 +3,8 @@ pub mod comment;
 pub mod follow;
 pub mod link;
 pub mod listing;
+pub mod message;
+pub mod moderation;
 pub mod save;
 pub mod search;
 pub mod submit;
@@ -16,6 +18,11 @@ pub use comment::CommentEndpoint;
 pub use follow::FollowEndpoint;
 pub use link::LinkEndpoint;
 pub use listing::ListingEndpoint;
+pub use message::{Message, MessageEndpoint, MessageFolder};
+pub use moderation::{
+    DistinguishType, ModAction, ModerationEndpoint, ModQueueLocation, ModReport, Report,
+    UserReport, UserManagementEndpoint,
+};
 pub use save::SaveEndpoint;
 pub use search::SearchEndpoint;
 pub use submit::{SubmitEndpoint, SubmitKind, SubmitOptions};

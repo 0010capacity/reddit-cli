@@ -9,44 +9,44 @@
 ## 체크리스트
 
 ### 5.1 개인 메시지 API
-- [ ] `src/api/endpoints/message.rs` - 메시지 API
-- [ ] `reddit message inbox` 커맨드
-- [ ] `reddit message unread` 커맨드
-- [ ] `reddit message sent` 커맨드
-- [ ] `reddit message send` 커맨드
-- [ ] `reddit message read` 커맨드
-- [ ] `reddit message unread` (동사) 커맨드
-- [ ] `reddit message delete` 커맨드
-- [ ] `reddit message block` 커맨드
+- [x] `src/api/endpoints/message.rs` - 메시지 API
+- [x] `reddit message inbox` 커맨드
+- [x] `reddit message unread` 커맨드
+- [x] `reddit message sent` 커맨드
+- [x] `reddit message send` 커맨드
+- [x] `reddit message read` 커맨드
+- [x] `reddit message unread` (동사) 커맨드
+- [x] `reddit message delete` 커맨드
+- [x] `reddit message block` 커맨드
 
 ### 5.2 모더레이션 기본 API
-- [ ] `src/api/endpoints/moderation.rs` - 모더레이션 API
-- [ ] `reddit mod reports` 커맨드
-- [ ] `reddit mod spam` 커맨드
-- [ ] `reddit mod modqueue` 커맨드
-- [ ] `reddit mod unmoderated` 커맨드
-- [ ] `reddit mod edited` 커맨드
-- [ ] `reddit mod log` 커맨드
+- [x] `src/api/endpoints/moderation.rs` - 모더레이션 API
+- [x] `reddit mod reports` 커맨드
+- [x] `reddit mod spam` 커맨드
+- [x] `reddit mod modqueue` 커맨드
+- [x] `reddit mod unmoderated` 커맨드
+- [x] `reddit mod edited` 커맨드
+- [x] `reddit mod log` 커맨드
 
 ### 5.3 모더레이션 액션 API
-- [ ] `reddit mod approve` 커맨드
-- [ ] `reddit mod remove` 커맨드
-- [ ] `reddit mod spam` (동사) 커맨드
-- [ ] `reddit mod distinguish` 커맨드
-- [ ] `reddit mod sticky` 커맨드
-- [ ] `reddit mod lock` 커맨드
-- [ ] `reddit mod nsfw` 커맨드
-- [ ] `reddit mod report` 커맨드
+- [x] `reddit mod approve` 커맨드
+- [x] `reddit mod remove` 커맨드
+- [x] `reddit mod spam` (동사) 커맨드
+- [x] `reddit mod distinguish` 커맨드
+- [x] `reddit mod sticky` 커맨드
+- [x] `reddit mod lock` 커맨드
+- [x] `reddit mod nsfw` 커맨드
+- [x] `reddit mod report` 커맨드
 
 ### 5.4 사용자 관리 API
-- [ ] `reddit mod ban` 커맨드
-- [ ] `reddit mod unban` 커맨드
-- [ ] `reddit mod mute` 커맨드
-- [ ] `reddit mod unmute` 커맨드
-- [ ] `reddit mod contributors` 커맨드
-- [ ] `reddit mod banned` 커맨드
-- [ ] `reddit mod muted` 커맨드
-- [ ] `reddit mod moderators` 커맨드
+- [x] `reddit mod ban` 커맨드
+- [x] `reddit mod unban` 커맨드
+- [x] `reddit mod mute` 커맨드
+- [x] `reddit mod unmute` 커맨드
+- [x] `reddit mod contributors` 커맨드
+- [x] `reddit mod banned` 커맨드
+- [x] `reddit mod muted` 커맨드
+- [x] `reddit mod moderators` 커맨드
 
 ---
 

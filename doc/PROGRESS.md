@@ -16,11 +16,11 @@
 | **Phase 2: 읽기 API** | ✅ 완료 |
 | **Phase 3: OAuth 인증** | ✅ 완료 |
 | **Phase 4: 쓰기 API** | ✅ 완료 |
-| **Phase 5: 메시지 & 모더레이션** | 🔲 미시작 |
+| **Phase 5: 메시지 & 모더레이션** | ✅ 완료 |
 | **Phase 6: 고급 기능** | 🔲 미시작 |
 | **Phase 7: 품질 개선** | 🔲 미시작 |
 
-**다음 작업**: Phase 5 시작 (`doc/phases/PHASE5.md` 참조)
+**다음 작업**: Phase 6 시작 (`doc/phases/PHASE6.md` 참조)
 
 ---
 
