@@ -1,9 +1,8 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
-const VERSION = '0.1.1';
+const VERSION = require('./package.json').version;
 const GITHUB_REPO = '0010capacity/reddit-cli';
 
 function getPlatform() {

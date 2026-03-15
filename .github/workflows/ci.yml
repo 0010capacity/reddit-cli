@@ -95,21 +95,17 @@ jobs:
   release:
     name: Release
     needs: [test, lint, build]
-    if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: reddit-cli-*
+          merge-multiple: true
 
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-
-      - name: Create Release
+      - name: Create release
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            reddit-cli-*/reddit-cli
-            reddit-cli-*/reddit-cli.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          files: reddit-cli-*
