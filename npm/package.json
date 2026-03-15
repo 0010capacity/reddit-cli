@@ -1,6 +1,6 @@
 {
   "name": "@0010capacity/reddit-cli",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A powerful CLI client for Reddit",
   "keywords": [
     "reddit",
