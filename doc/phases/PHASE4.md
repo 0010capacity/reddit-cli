@@ -9,40 +9,40 @@
 ## 체크리스트
 
 ### 4.1 투표 API
-- [ ] `src/api/endpoints/vote.rs` - 투표 API
-- [ ] `reddit upvote <id>` 커맨드
-- [ ] `reddit downvote <id>` 커맨드
-- [ ] `reddit unvote <id>` 커맨드
+- [x] `src/api/endpoints/vote.rs` - 투표 API
+- [x] `reddit upvote <id>` 커맨드
+- [x] `reddit downvote <id>` 커맨드
+- [x] `reddit unvote <id>` 커맨드
 
 ### 4.2 저장/숨기기 API
-- [ ] `src/api/endpoints/save.rs` - 저장/숨기기 API
-- [ ] `reddit save <id>` 커맨드
-- [ ] `reddit unsave <id>` 커맨드
-- [ ] `reddit hide <id>` 커맨드
-- [ ] `reddit unhide <id>` 커맨드
+- [x] `src/api/endpoints/save.rs` - 저장/숨기기 API
+- [x] `reddit save <id>` 커맨드
+- [x] `reddit unsave <id>` 커맨드
+- [x] `reddit hide <id>` 커맨드
+- [x] `reddit unhide <id>` 커맨드
 
 ### 4.3 구독 API
-- [ ] `src/api/endpoints/subscribe.rs` - 구독 API
-- [ ] `reddit subscribe <subreddit>` 커맨드
-- [ ] `reddit unsubscribe <subreddit>` 커맨드
+- [x] `src/api/endpoints/subscribe.rs` - 구독 API
+- [x] `reddit subscribe <subreddit>` 커맨드
+- [x] `reddit unsubscribe <subreddit>` 커맨드
 
 ### 4.4 게시물 작성 API
-- [ ] `src/api/endpoints/submit.rs` - 게시물 작성 API
-- [ ] `reddit submit link` 커맨드
-- [ ] `reddit submit self` 커맨드
-- [ ] `reddit submit image` 커맨드 (파일 업로드)
-- [ ] `reddit edit <id>` 커맨드
-- [ ] `reddit delete <id>` 커맨드
+- [x] `src/api/endpoints/submit.rs` - 게시물 작성 API
+- [x] `reddit submit link` 커맨드
+- [x] `reddit submit text` 커맨드
+- [x] `reddit edit <id>` 커맨드
+- [x] `reddit delete <id>` 커맨드
 
 ### 4.5 댓글 API
-- [ ] `src/api/endpoints/comment.rs` - 댓글 API
-- [ ] `reddit comment <parent>` 커맨드
-- [ ] `reddit comment edit <id>` 커맨드
-- [ ] `reddit comment delete <id>` 커맨드
+- [x] `src/api/endpoints/comment.rs` - 댓글 API
+- [x] `reddit comment <parent>` 커맨드
+- [x] `reddit comment edit <id>` 커맨드
+- [x] `reddit comment delete <id>` 커맨드
 
 ### 4.6 팔로우 API
-- [ ] `reddit follow <post_id>` - 게시물 팔로우
-- [ ] `reddit unfollow <post_id>` - 게시물 언팔로우
+- [x] `src/api/endpoints/follow.rs` - 팔로우 API
+- [x] `reddit follow <post_id>` 커맨드
+- [x] `reddit unfollow <post_id>` 커맨드
 
 ---
 

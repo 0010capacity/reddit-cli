@@ -1,6 +1,7 @@
 use clap::{Parser, Subcommand};
 use crate::api::Client;
 use crate::api::endpoints::{AccountEndpoint, ListingEndpoint, SubredditEndpoint, UserEndpoint, SearchEndpoint, LinkEndpoint};
+use crate::api::endpoints::{CommentEndpoint, FollowEndpoint, SaveEndpoint, SubmitEndpoint, SubscribeEndpoint, VoteEndpoint, SubmitKind, SubmitOptions};
 use crate::api::OAuthClient;
 use crate::config::Settings;
 use crate::output::{get_output, OutputFormat};
@@ -88,6 +89,132 @@ pub enum Commands {
     /// Account commands (requires authentication)
     #[command(subcommand)]
     Me(MeCommands),
+    /// Upvote a post or comment
+    Upvote {
+        /// Fullname (t3_xxx for posts, t1_xxx for comments)
+        id: String,
+    },
+    /// Downvote a post or comment
+    Downvote {
+        /// Fullname (t3_xxx for posts, t1_xxx for comments)
+        id: String,
+    },
+    /// Remove vote from a post or comment
+    Unvote {
+        /// Fullname (t3_xxx for posts, t1_xxx for comments)
+        id: String,
+    },
+    /// Save a post or comment
+    Save {
+        /// Fullname (t3_xxx for posts, t1_xxx for comments)
+        id: String,
+        /// Category for saved item
+        #[arg(short, long)]
+        category: Option<String>,
+    },
+    /// Unsave a post or comment
+    Unsave {
+        /// Fullname
+        id: String,
+    },
+    /// Hide a post
+    Hide {
+        /// Fullname (t3_xxx)
+        id: String,
+    },
+    /// Unhide a post
+    Unhide {
+        /// Fullname (t3_xxx)
+        id: String,
+    },
+    /// Subscribe to a subreddit
+    Subscribe {
+        /// Subreddit name (without r/)
+        subreddit: String,
+    },
+    /// Unsubscribe from a subreddit
+    Unsubscribe {
+        /// Subreddit name (without r/)
+        subreddit: String,
+    },
+    /// Submit a post
+    Submit {
+        #[command(subcommand)]
+        command: SubmitCommands,
+    },
+    /// Comment on a post or reply to a comment
+    Comment {
+        /// Parent fullname (t3_xxx for post, t1_xxx for comment)
+        parent: String,
+        /// Comment text (markdown)
+        #[arg(short, long)]
+        text: String,
+    },
+    /// Edit a post or comment
+    Edit {
+        /// Fullname of the thing to edit
+        id: String,
+        /// New text (markdown)
+        #[arg(short, long)]
+        text: String,
+    },
+    /// Delete a post or comment
+    Delete {
+        /// Fullname to delete
+        id: String,
+    },
+    /// Follow a post
+    Follow {
+        /// Post fullname (t3_xxx)
+        id: String,
+    },
+    /// Unfollow a post
+    Unfollow {
+        /// Post fullname (t3_xxx)
+        id: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum SubmitCommands {
+    /// Submit a link post
+    Link {
+        /// Subreddit name
+        #[arg(short = 'r', long)]
+        subreddit: String,
+        /// Post title
+        #[arg(short, long)]
+        title: String,
+        /// URL
+        url: String,
+        /// Mark as NSFW
+        #[arg(long)]
+        nsfw: bool,
+        /// Mark as spoiler
+        #[arg(long)]
+        spoiler: bool,
+    },
+    /// Submit a self (text) post
+    Text {
+        /// Subreddit name
+        #[arg(short = 'r', long)]
+        subreddit: String,
+        /// Post title
+        #[arg(short, long)]
+        title: String,
+        /// Post body (markdown)
+        #[arg(short, long)]
+        text: Option<String>,
+        /// Read text from file
+        #[arg(short = 'f', long)]
+        file: Option<String>,
+        /// Mark as NSFW
+        #[arg(long)]
+        nsfw: bool,
+        /// Mark as spoiler
+        #[arg(long)]
+        spoiler: bool,
+    },
 }
 
 #[derive(Subcommand)]
@@ -554,8 +681,156 @@ impl Cli {
                     }
                 }
             }
+            Commands::Upvote { id } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::VoteEndpoint::new(&client)
+                    .upvote(id).await?;
+                println!("Upvoted {}", id);
+            }
+            Commands::Downvote { id } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::VoteEndpoint::new(&client)
+                    .downvote(id).await?;
+                println!("Downvoted {}", id);
+            }
+            Commands::Unvote { id } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::VoteEndpoint::new(&client)
+                    .unvote(id).await?;
+                println!("Vote removed from {}", id);
+            }
+            Commands::Save { id, category } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::SaveEndpoint::new(&client)
+                    .save(id, category.as_deref()).await?;
+                println!("Saved {}", id);
+            }
+            Commands::Unsave { id } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::SaveEndpoint::new(&client)
+                    .unsave(id).await?;
+                println!("Unsaved {}", id);
+            }
+            Commands::Hide { id } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::SaveEndpoint::new(&client)
+                    .hide(id).await?;
+                println!("Hidden {}", id);
+            }
+            Commands::Unhide { id } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::SaveEndpoint::new(&client)
+                    .unhide(id).await?;
+                println!("Unhidden {}", id);
+            }
+            Commands::Subscribe { subreddit } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::SubscribeEndpoint::new(&client)
+                    .subscribe(subreddit).await?;
+                println!("Subscribed to r/{}", subreddit);
+            }
+            Commands::Unsubscribe { subreddit } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::SubscribeEndpoint::new(&client)
+                    .unsubscribe(subreddit).await?;
+                println!("Unsubscribed from r/{}", subreddit);
+            }
+            Commands::Submit { command } => {
+                ensure_authenticated()?;
+                match command {
+                    SubmitCommands::Link { subreddit, title, url, nsfw, spoiler } => {
+                        let result = crate::api::endpoints::SubmitEndpoint::new(&client)
+                            .submit(&crate::api::endpoints::SubmitOptions {
+                                subreddit: subreddit.clone(),
+                                title: title.clone(),
+                                kind: crate::api::endpoints::SubmitKind::Link,
+                                url: Some(url.clone()),
+                                text: None,
+                                flair_id: None,
+                                flair_text: None,
+                                nsfw: *nsfw,
+                                spoiler: *spoiler,
+                                send_replies: true,
+                            }).await?;
+                        if let Some(data) = result.json.data {
+                            println!("Posted: {}", data.url);
+                        } else if !result.json.errors.is_empty() {
+                            anyhow::bail!("Failed to submit: {:?}", result.json.errors);
+                        }
+                    }
+                    SubmitCommands::Text { subreddit, title, text, file, nsfw, spoiler } => {
+                        let body = if let Some(path) = file {
+                            std::fs::read_to_string(path)?
+                        } else {
+                            text.clone().unwrap_or_default()
+                        };
+
+                        let result = crate::api::endpoints::SubmitEndpoint::new(&client)
+                            .submit(&crate::api::endpoints::SubmitOptions {
+                                subreddit: subreddit.clone(),
+                                title: title.clone(),
+                                kind: crate::api::endpoints::SubmitKind::SelfPost,
+                                url: None,
+                                text: Some(body),
+                                flair_id: None,
+                                flair_text: None,
+                                nsfw: *nsfw,
+                                spoiler: *spoiler,
+                                send_replies: true,
+                            }).await?;
+                        if let Some(data) = result.json.data {
+                            println!("Posted: {}", data.url);
+                        } else if !result.json.errors.is_empty() {
+                            anyhow::bail!("Failed to submit: {:?}", result.json.errors);
+                        }
+                    }
+                }
+            }
+            Commands::Comment { parent, text } => {
+                ensure_authenticated()?;
+                let result = crate::api::endpoints::CommentEndpoint::new(&client)
+                    .submit(parent, text).await?;
+                if let Some(data) = result.json.data {
+                    if let Some(thing) = data.things.first() {
+                        println!("Comment posted: {}", thing.data.name);
+                    }
+                } else if !result.json.errors.is_empty() {
+                    anyhow::bail!("Failed to comment: {:?}", result.json.errors);
+                }
+            }
+            Commands::Edit { id, text } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::SubmitEndpoint::new(&client)
+                    .edit(id, text).await?;
+                println!("Edited {}", id);
+            }
+            Commands::Delete { id } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::SubmitEndpoint::new(&client)
+                    .delete(id).await?;
+                println!("Deleted {}", id);
+            }
+            Commands::Follow { id } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::FollowEndpoint::new(&client)
+                    .follow(id).await?;
+                println!("Following {}", id);
+            }
+            Commands::Unfollow { id } => {
+                ensure_authenticated()?;
+                crate::api::endpoints::FollowEndpoint::new(&client)
+                    .unfollow(id).await?;
+                println!("Unfollowed {}", id);
+            }
         }
 
         Ok(())
     }
+}
+
+fn ensure_authenticated() -> anyhow::Result<()> {
+    if crate::cache::CachedToken::load()?.is_none() {
+        anyhow::bail!("Not authenticated. Run `reddit auth login` first.");
+    }
+    Ok(())
 }
