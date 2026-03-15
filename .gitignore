@@ -1,0 +1,24 @@
+# Build artifacts
+/target/
+Cargo.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets and tokens
+token.json
+credentials.toml
+.env
+.env.*
+
+# Test artifacts
+*.profraw
+*.profdata
