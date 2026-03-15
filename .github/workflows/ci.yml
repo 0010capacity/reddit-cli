@@ -86,11 +86,20 @@ jobs:
       - name: Build
         run: cargo build --release --target ${{ matrix.target }}
 
+      - name: Prepare binary
+        run: |
+          cd target/${{ matrix.target }}/release
+          if [ "${{ matrix.target }}" = "x86_64-pc-windows-msvc" ]; then
+            mv reddit-cli.exe reddit-cli-${{ matrix.target }}.exe
+          else
+            mv reddit-cli reddit-cli-${{ matrix.target }}
+          fi
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: reddit-cli-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/reddit-cli*
+          path: target/${{ matrix.target }}/release/reddit-cli-${{ matrix.target }}*
 
   release:
     name: Release
