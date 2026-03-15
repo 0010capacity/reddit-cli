@@ -1,10 +1,16 @@
 pub mod account;
+pub mod collection;
 pub mod comment;
+pub mod flair;
 pub mod follow;
 pub mod link;
 pub mod listing;
+pub mod live;
 pub mod message;
 pub mod moderation;
+pub mod modmail;
+pub mod modnote;
+pub mod multi;
 pub mod save;
 pub mod search;
 pub mod submit;
@@ -12,17 +18,23 @@ pub mod subscribe;
 pub mod subreddit;
 pub mod user;
 pub mod vote;
+pub mod wiki;
 
 pub use account::AccountEndpoint;
+pub use collection::CollectionEndpoint;
 pub use comment::CommentEndpoint;
+pub use flair::{FlairChoice, FlairEndpoint, FlairSelectorResponse, FlairTemplate};
 pub use follow::FollowEndpoint;
 pub use link::LinkEndpoint;
 pub use listing::ListingEndpoint;
+pub use live::{LiveContributor, LiveEndpoint, LiveThread, LiveUpdate};
 pub use message::{Message, MessageEndpoint, MessageFolder};
 pub use moderation::{
-    DistinguishType, ModAction, ModerationEndpoint, ModQueueLocation, ModReport, Report,
-    UserReport, UserManagementEndpoint,
+    DistinguishType, ModerationEndpoint, ModQueueLocation, UserManagementEndpoint,
 };
+pub use modmail::{ModmailAuthor, ModmailConversation, ModmailConversationResponse, ModmailEndpoint, ModmailListResponse, ModmailMessage, ModmailParticipant, ModmailState};
+pub use modnote::{ModNote, ModNoteEndpoint, ModNoteLabel, ModNoteListResponse};
+pub use multi::{CreateMultiRequest, Multi, MultiData, MultiEndpoint, MultiSubreddit, MultiSubredditInput};
 pub use save::SaveEndpoint;
 pub use search::SearchEndpoint;
 pub use submit::{SubmitEndpoint, SubmitKind, SubmitOptions};
@@ -30,3 +42,4 @@ pub use subscribe::SubscribeEndpoint;
 pub use subreddit::SubredditEndpoint;
 pub use user::UserEndpoint;
 pub use vote::VoteEndpoint;
+pub use wiki::{WikiEndpoint, WikiPage, WikiPageList, WikiRevision, WikiSettings};

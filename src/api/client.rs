@@ -189,6 +189,119 @@ impl Client {
         response.json().await.map_err(Into::into)
     }
 
+    /// Make an authenticated POST request with empty body
+    pub async fn post_authenticated_empty<T: serde::de::DeserializeOwned>(
+        &self,
+        path: &str,
+    ) -> Result<T> {
+        let token = self.get_valid_token().await?;
+
+        let url = format!("{}{}", self.base_url, path);
+
+        tracing::debug!("POST {} (authenticated, empty body)", url);
+
+        let response = self
+            .http
+            .post(&url)
+            .bearer_auth(&token)
+            .header("Content-Length", "0")
+            .send()
+            .await?;
+
+        let status = response.status();
+        if status.is_client_error() || status.is_server_error() {
+            let body = response.text().await.unwrap_or_default();
+            return Err(RedditError::Api(format!("HTTP {}: {}", status, body)));
+        }
+
+        response.json().await.map_err(Into::into)
+    }
+
+    /// Make an authenticated PUT request
+    pub async fn put_authenticated<T: serde::de::DeserializeOwned>(
+        &self,
+        path: &str,
+        form: &[(&str, &str)],
+    ) -> Result<T> {
+        let token = self.get_valid_token().await?;
+
+        let url = format!("{}{}", self.base_url, path);
+
+        tracing::debug!("PUT {} (authenticated)", url);
+
+        let response = self
+            .http
+            .put(&url)
+            .bearer_auth(&token)
+            .form(form)
+            .send()
+            .await?;
+
+        let status = response.status();
+        if status.is_client_error() || status.is_server_error() {
+            let body = response.text().await.unwrap_or_default();
+            return Err(RedditError::Api(format!("HTTP {}: {}", status, body)));
+        }
+
+        response.json().await.map_err(Into::into)
+    }
+
+    /// Make an authenticated DELETE request
+    pub async fn delete_authenticated<T: serde::de::DeserializeOwned>(
+        &self,
+        path: &str,
+    ) -> Result<T> {
+        let token = self.get_valid_token().await?;
+
+        let url = format!("{}{}", self.base_url, path);
+
+        tracing::debug!("DELETE {} (authenticated)", url);
+
+        let response = self
+            .http
+            .delete(&url)
+            .bearer_auth(&token)
+            .send()
+            .await?;
+
+        let status = response.status();
+        if status.is_client_error() || status.is_server_error() {
+            let body = response.text().await.unwrap_or_default();
+            return Err(RedditError::Api(format!("HTTP {}: {}", status, body)));
+        }
+
+        response.json().await.map_err(Into::into)
+    }
+
+    /// Make an authenticated DELETE request with form body
+    pub async fn delete_authenticated_with_body<T: serde::de::DeserializeOwned>(
+        &self,
+        path: &str,
+        form: &[(&str, &str)],
+    ) -> Result<T> {
+        let token = self.get_valid_token().await?;
+
+        let url = format!("{}{}", self.base_url, path);
+
+        tracing::debug!("DELETE {} with body (authenticated)", url);
+
+        let response = self
+            .http
+            .delete(&url)
+            .bearer_auth(&token)
+            .form(form)
+            .send()
+            .await?;
+
+        let status = response.status();
+        if status.is_client_error() || status.is_server_error() {
+            let body = response.text().await.unwrap_or_default();
+            return Err(RedditError::Api(format!("HTTP {}: {}", status, body)));
+        }
+
+        response.json().await.map_err(Into::into)
+    }
+
     /// Get a valid access token, refreshing if necessary
     async fn get_valid_token(&self) -> Result<String> {
         let token = CachedToken::load()?.ok_or(RedditError::NotAuthenticated)?;

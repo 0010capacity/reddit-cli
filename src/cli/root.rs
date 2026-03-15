@@ -180,6 +180,27 @@ pub enum Commands {
     /// Moderation commands (requires authentication)
     #[command(subcommand)]
     Mod(ModCommands),
+    /// Flair commands
+    #[command(subcommand)]
+    Flair(FlairCommands),
+    /// Wiki commands
+    #[command(subcommand)]
+    Wiki(WikiCommands),
+    /// Multi commands
+    #[command(subcommand)]
+    Multi(MultiCommands),
+    /// Live thread commands
+    #[command(subcommand)]
+    Live(LiveCommands),
+    /// Collection commands
+    #[command(subcommand)]
+    Collection(CollectionCommands),
+    /// Modmail commands
+    #[command(subcommand)]
+    Modmail(ModmailCommands),
+    /// Mod note commands
+    #[command(subcommand)]
+    Modnote(ModnoteCommands),
 }
 
 #[derive(Subcommand)]
@@ -505,6 +526,245 @@ pub enum ModCommands {
     /// List moderators of a subreddit
     Mods {
         subreddit: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum FlairCommands {
+    /// List user flairs in a subreddit
+    List {
+        subreddit: String,
+        #[arg(short, long)]
+        user: Option<String>,
+    },
+    /// Set user flair
+    Set {
+        subreddit: String,
+        #[arg(short, long)]
+        user: String,
+        #[arg(short, long)]
+        text: Option<String>,
+        #[arg(short, long)]
+        css: Option<String>,
+    },
+    /// Delete user flair
+    Delete {
+        subreddit: String,
+        #[arg(short, long)]
+        user: String,
+    },
+    /// List flair templates
+    Templates {
+        subreddit: String,
+        /// Type: user or link
+        #[arg(short = 't', long, default_value = "user")]
+        flair_type: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum WikiCommands {
+    /// List wiki pages
+    Pages {
+        subreddit: String,
+    },
+    /// View wiki page
+    View {
+        subreddit: String,
+        page: String,
+    },
+    /// View wiki page revisions
+    Revisions {
+        subreddit: String,
+        #[arg(short, long)]
+        page: Option<String>,
+    },
+    /// Edit wiki page
+    Edit {
+        subreddit: String,
+        page: String,
+        #[arg(short, long)]
+        content: String,
+        #[arg(short, long)]
+        reason: Option<String>,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum MultiCommands {
+    /// List your multis
+    List,
+    /// Show a multi
+    Show {
+        /// Multi path (e.g., user/username/m/multiname)
+        path: String,
+    },
+    /// Create a multi
+    Create {
+        name: String,
+        #[arg(short = 'r', long)]
+        subreddits: Vec<String>,
+        #[arg(short, long)]
+        description: Option<String>,
+    },
+    /// Delete a multi
+    Delete {
+        path: String,
+    },
+    /// Add subreddit to multi
+    Add {
+        path: String,
+        subreddit: String,
+    },
+    /// Remove subreddit from multi
+    Remove {
+        path: String,
+        subreddit: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum LiveCommands {
+    /// Show live thread info
+    Show {
+        thread_id: String,
+    },
+    /// View live thread updates
+    Updates {
+        thread_id: String,
+        #[arg(short, long, default_value = "25")]
+        limit: u32,
+    },
+    /// View live thread contributors
+    Contributors {
+        thread_id: String,
+    },
+    /// Create a live thread
+    Create {
+        #[arg(short, long)]
+        title: String,
+        #[arg(short, long)]
+        description: Option<String>,
+        #[arg(long)]
+        nsfw: bool,
+    },
+    /// Post update to live thread
+    Update {
+        thread_id: String,
+        #[arg(short, long)]
+        body: String,
+    },
+    /// Close a live thread
+    Close {
+        thread_id: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum CollectionCommands {
+    /// Show a collection
+    Show {
+        collection_id: String,
+    },
+    /// List collections in a subreddit
+    List {
+        /// Subreddit fullname (t5_xxx)
+        subreddit: String,
+    },
+    /// Create a collection
+    Create {
+        #[arg(short = 'r', long)]
+        subreddit: String,
+        #[arg(short, long)]
+        title: String,
+        #[arg(short, long)]
+        description: Option<String>,
+    },
+    /// Delete a collection
+    Delete {
+        collection_id: String,
+    },
+    /// Add post to collection
+    Add {
+        collection_id: String,
+        #[arg(short, long)]
+        post: String,
+    },
+    /// Remove post from collection
+    Remove {
+        collection_id: String,
+        #[arg(short, long)]
+        post: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum ModmailCommands {
+    /// List modmail conversations
+    List {
+        #[arg(short, long)]
+        subreddit: Option<String>,
+        #[arg(short = 't', long, default_value = "all")]
+        state: String,
+    },
+    /// Show a modmail conversation
+    Show {
+        conversation_id: String,
+    },
+    /// Reply to modmail
+    Reply {
+        conversation_id: String,
+        #[arg(short, long)]
+        body: String,
+        #[arg(long)]
+        internal: bool,
+    },
+    /// Create a new modmail
+    Create {
+        #[arg(short = 'r', long)]
+        subreddit: String,
+        #[arg(short, long)]
+        to: String,
+        #[arg(short, long)]
+        subject: String,
+        #[arg(short, long)]
+        body: String,
+    },
+    /// Archive a modmail conversation
+    Archive {
+        conversation_id: String,
+    },
+    /// Highlight a modmail conversation
+    Highlight {
+        conversation_id: String,
+    },
+    /// Mute modmail participant
+    Mmute {
+        conversation_id: String,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum ModnoteCommands {
+    /// Show mod notes for a user
+    Show {
+        subreddit: String,
+        user: String,
+    },
+    /// Add a mod note
+    Add {
+        subreddit: String,
+        user: String,
+        #[arg(short, long)]
+        note: String,
+        #[arg(short = 't', long)]
+        label: Option<String>,
+    },
+    /// Delete a mod note
+    Delete {
+        subreddit: String,
+        user: String,
+        note_id: String,
     },
 }
 
@@ -1386,6 +1646,402 @@ impl Cli {
                                 }
                             }
                         }
+                    }
+                }
+            }
+            Commands::Flair(cmd) => {
+                match cmd {
+                    FlairCommands::List { subreddit, user } => {
+                        use crate::api::endpoints::FlairEndpoint;
+                        let endpoint = FlairEndpoint::new(&client, subreddit);
+                        let listing = endpoint.list(Some(self.limit), None, user.as_deref()).await?;
+
+                        println!("=== Flairs in r/{} ===\n", subreddit);
+                        if listing.data.children.is_empty() {
+                            println!("No flairs found.");
+                        } else {
+                            for flair in &listing.data.children {
+                                println!("u/{}", flair.data.user);
+                                if let Some(text) = &flair.data.flair_text {
+                                    println!("   Text: {}", text);
+                                }
+                                if let Some(css) = &flair.data.flair_css_class {
+                                    println!("   CSS: {}", css);
+                                }
+                            }
+                        }
+                    }
+                    FlairCommands::Set { subreddit, user, text, css } => {
+                        use crate::api::endpoints::FlairEndpoint;
+                        let endpoint = FlairEndpoint::new(&client, subreddit);
+                        endpoint.set_user_flair(user, text.as_deref(), css.as_deref(), None).await?;
+                        println!("Set flair for u/{} in r/{}", user, subreddit);
+                    }
+                    FlairCommands::Delete { subreddit, user } => {
+                        use crate::api::endpoints::FlairEndpoint;
+                        let endpoint = FlairEndpoint::new(&client, subreddit);
+                        endpoint.delete_user_flair(user).await?;
+                        println!("Deleted flair for u/{} in r/{}", user, subreddit);
+                    }
+                    FlairCommands::Templates { subreddit, flair_type } => {
+                        use crate::api::endpoints::FlairEndpoint;
+                        let endpoint = FlairEndpoint::new(&client, subreddit);
+                        let templates = if flair_type == "link" {
+                            endpoint.link_flair_templates().await?
+                        } else {
+                            endpoint.user_flair_templates().await?
+                        };
+
+                        println!("=== {} Flair Templates in r/{} ===\n", flair_type, subreddit);
+                        for template in &templates {
+                            println!("{}", template.id);
+                            if let Some(text) = &template.text {
+                                println!("   Text: {}", text);
+                            }
+                            if let Some(color) = &template.background_color {
+                                println!("   Background: {}", color);
+                            }
+                            if template.mod_only {
+                                println!("   [Mod Only]");
+                            }
+                        }
+                    }
+                }
+            }
+            Commands::Wiki(cmd) => {
+                match cmd {
+                    WikiCommands::Pages { subreddit } => {
+                        use crate::api::endpoints::WikiEndpoint;
+                        let endpoint = WikiEndpoint::new(&client, subreddit);
+                        let pages = endpoint.pages().await?;
+
+                        println!("=== Wiki Pages in r/{} ===\n", subreddit);
+                        for page in &pages.data {
+                            println!("- {}", page);
+                        }
+                    }
+                    WikiCommands::View { subreddit, page } => {
+                        use crate::api::endpoints::WikiEndpoint;
+                        let endpoint = WikiEndpoint::new(&client, subreddit);
+                        let wiki_page = endpoint.page(page).await?;
+
+                        println!("=== {} ===\n", page);
+                        println!("{}", wiki_page.content);
+                    }
+                    WikiCommands::Revisions { subreddit, page } => {
+                        use crate::api::endpoints::WikiEndpoint;
+                        let endpoint = WikiEndpoint::new(&client, subreddit);
+                        let revisions = if let Some(p) = page {
+                            endpoint.revisions(p, Some(self.limit)).await?
+                        } else {
+                            endpoint.recent_changes(Some(self.limit)).await?
+                        };
+
+                        println!("=== Wiki Revisions in r/{} ===\n", subreddit);
+                        for rev in &revisions.data.children {
+                            let timestamp = chrono::DateTime::from_timestamp(rev.data.timestamp as i64, 0)
+                                .map(|d| d.to_rfc2822())
+                                .unwrap_or_else(|| "Unknown".to_string());
+                            println!("{} - by u/{}", timestamp, rev.data.author.data.name);
+                            if let Some(reason) = &rev.data.reason {
+                                println!("   Reason: {}", reason);
+                            }
+                        }
+                    }
+                    WikiCommands::Edit { subreddit, page, content, reason } => {
+                        use crate::api::endpoints::WikiEndpoint;
+                        let endpoint = WikiEndpoint::new(&client, subreddit);
+                        endpoint.edit(page, content, reason.as_deref(), None).await?;
+                        println!("Updated wiki page '{}' in r/{}", page, subreddit);
+                    }
+                }
+            }
+            Commands::Multi(cmd) => {
+                match cmd {
+                    MultiCommands::List => {
+                        use crate::api::endpoints::MultiEndpoint;
+                        let endpoint = MultiEndpoint::new(&client);
+                        let multis = endpoint.mine().await?;
+
+                        println!("=== Your Multis ===\n");
+                        for multi in &multis {
+                            let data = &multi.data;
+                            println!("- {} ({})", data.display_name, data.path);
+                            println!("  {} subreddits", data.subreddits.len());
+                        }
+                    }
+                    MultiCommands::Show { path } => {
+                        use crate::api::endpoints::MultiEndpoint;
+                        let endpoint = MultiEndpoint::new(&client);
+                        let multi = endpoint.get(path).await?;
+
+                        println!("=== {} ===\n", multi.data.display_name);
+                        println!("Path: {}", multi.data.path);
+                        if let Some(desc) = &multi.data.description_md {
+                            println!("\n{}", desc);
+                        }
+                        println!("\nSubreddits:");
+                        for sr in &multi.data.subreddits {
+                            println!("- r/{}", sr.name);
+                        }
+                    }
+                    MultiCommands::Create { name, subreddits, description } => {
+                        use crate::api::endpoints::{MultiEndpoint, CreateMultiRequest, MultiSubredditInput};
+                        let endpoint = MultiEndpoint::new(&client);
+                        let request = CreateMultiRequest {
+                            display_name: name.clone(),
+                            subreddits: subreddits.iter().map(|s| MultiSubredditInput { name: s.clone() }).collect(),
+                            description_md: description.clone(),
+                            icon_name: None,
+                            key_color: None,
+                            visibility: Some("private".to_string()),
+                        };
+                        let path = format!("user/me/m/{}", name);
+                        endpoint.create(&path, &request).await?;
+                        println!("Created multi '{}' with {} subreddits", name, subreddits.len());
+                    }
+                    MultiCommands::Delete { path } => {
+                        use crate::api::endpoints::MultiEndpoint;
+                        let endpoint = MultiEndpoint::new(&client);
+                        endpoint.delete(path).await?;
+                        println!("Deleted multi '{}'", path);
+                    }
+                    MultiCommands::Add { path, subreddit } => {
+                        use crate::api::endpoints::MultiEndpoint;
+                        let endpoint = MultiEndpoint::new(&client);
+                        endpoint.add_subreddit(path, subreddit).await?;
+                        println!("Added r/{} to multi '{}'", subreddit, path);
+                    }
+                    MultiCommands::Remove { path, subreddit } => {
+                        use crate::api::endpoints::MultiEndpoint;
+                        let endpoint = MultiEndpoint::new(&client);
+                        endpoint.remove_subreddit(path, subreddit).await?;
+                        println!("Removed r/{} from multi '{}'", subreddit, path);
+                    }
+                }
+            }
+            Commands::Live(cmd) => {
+                match cmd {
+                    LiveCommands::Show { thread_id } => {
+                        use crate::api::endpoints::LiveEndpoint;
+                        let endpoint = LiveEndpoint::new(&client);
+                        let thread = endpoint.about(thread_id).await?;
+
+                        println!("=== {} ===\n", thread.title);
+                        println!("ID: {}", thread.id);
+                        println!("State: {}", thread.state);
+                        if let Some(desc) = &thread.description {
+                            println!("\n{}", desc);
+                        }
+                        if let Some(count) = thread.viewer_count {
+                            println!("\nViewers: {}", count);
+                        }
+                    }
+                    LiveCommands::Updates { thread_id, limit } => {
+                        use crate::api::endpoints::LiveEndpoint;
+                        let endpoint = LiveEndpoint::new(&client);
+                        let updates = endpoint.updates(thread_id, Some(*limit), None).await?;
+
+                        println!("=== Live Thread {} Updates ===\n", thread_id);
+                        for update in &updates.data.children {
+                            let time = chrono::DateTime::from_timestamp(update.data.created_utc as i64, 0)
+                                .map(|d| d.format("%H:%M:%S").to_string())
+                                .unwrap_or_else(|| "?".to_string());
+                            println!("[{}] u/{}:", time, update.data.author);
+                            println!("{}\n", update.data.body);
+                        }
+                    }
+                    LiveCommands::Contributors { thread_id } => {
+                        use crate::api::endpoints::LiveEndpoint;
+                        let endpoint = LiveEndpoint::new(&client);
+                        let contributors = endpoint.contributors(thread_id).await?;
+
+                        println!("=== Contributors to Live Thread {} ===\n", thread_id);
+                        for c in &contributors {
+                            println!("u/{} - {}", c.name, c.permissions.join(", "));
+                        }
+                    }
+                    LiveCommands::Create { title, description, nsfw } => {
+                        use crate::api::endpoints::LiveEndpoint;
+                        let endpoint = LiveEndpoint::new(&client);
+                        let thread = endpoint.create(title, description.as_deref(), None, *nsfw).await?;
+                        println!("Created live thread: {} (ID: {})", thread.title, thread.id);
+                    }
+                    LiveCommands::Update { thread_id, body } => {
+                        use crate::api::endpoints::LiveEndpoint;
+                        let endpoint = LiveEndpoint::new(&client);
+                        endpoint.update(thread_id, body).await?;
+                        println!("Posted update to live thread {}", thread_id);
+                    }
+                    LiveCommands::Close { thread_id } => {
+                        use crate::api::endpoints::LiveEndpoint;
+                        let endpoint = LiveEndpoint::new(&client);
+                        endpoint.close(thread_id).await?;
+                        println!("Closed live thread {}", thread_id);
+                    }
+                }
+            }
+            Commands::Collection(cmd) => {
+                match cmd {
+                    CollectionCommands::Show { collection_id } => {
+                        use crate::api::endpoints::CollectionEndpoint;
+                        let endpoint = CollectionEndpoint::new(&client);
+                        let collection = endpoint.get(collection_id).await?;
+
+                        println!("=== {} ===\n", collection.title);
+                        if let Some(desc) = &collection.description {
+                            println!("{}\n", desc);
+                        }
+                        println!("Posts: {}", collection.link_ids.len());
+                        for link in &collection.link_ids {
+                            println!("- {}", link);
+                        }
+                    }
+                    CollectionCommands::List { subreddit } => {
+                        use crate::api::endpoints::CollectionEndpoint;
+                        let endpoint = CollectionEndpoint::new(&client);
+                        let collections = endpoint.subreddit(subreddit).await?;
+
+                        println!("=== Collections ===\n");
+                        for c in &collections {
+                            println!("- {} ({})", c.title, c.collection_id);
+                        }
+                    }
+                    CollectionCommands::Create { subreddit, title, description } => {
+                        use crate::api::endpoints::CollectionEndpoint;
+                        let endpoint = CollectionEndpoint::new(&client);
+                        let collection = endpoint.create(title, subreddit, description.as_deref(), None).await?;
+                        println!("Created collection: {} (ID: {})", collection.title, collection.collection_id);
+                    }
+                    CollectionCommands::Delete { collection_id } => {
+                        use crate::api::endpoints::CollectionEndpoint;
+                        let endpoint = CollectionEndpoint::new(&client);
+                        endpoint.delete(collection_id).await?;
+                        println!("Deleted collection {}", collection_id);
+                    }
+                    CollectionCommands::Add { collection_id, post } => {
+                        use crate::api::endpoints::CollectionEndpoint;
+                        let endpoint = CollectionEndpoint::new(&client);
+                        endpoint.add_post(collection_id, post).await?;
+                        println!("Added {} to collection {}", post, collection_id);
+                    }
+                    CollectionCommands::Remove { collection_id, post } => {
+                        use crate::api::endpoints::CollectionEndpoint;
+                        let endpoint = CollectionEndpoint::new(&client);
+                        endpoint.remove_post(collection_id, post).await?;
+                        println!("Removed {} from collection {}", post, collection_id);
+                    }
+                }
+            }
+            Commands::Modmail(cmd) => {
+                match cmd {
+                    ModmailCommands::List { subreddit, state } => {
+                        use crate::api::endpoints::{ModmailEndpoint, ModmailState};
+                        let endpoint = ModmailEndpoint::new(&client);
+                        let state_enum = match state.as_str() {
+                            "new" => ModmailState::New,
+                            "archived" => ModmailState::Archived,
+                            "mod" => ModmailState::Mod,
+                            "inbox" => ModmailState::Inbox,
+                            _ => ModmailState::All,
+                        };
+                        let entities = subreddit.as_ref().map(|s| vec![s.as_str()]);
+                        let response = endpoint.list(entities.as_deref(), Some(state_enum), Some(self.limit)).await?;
+
+                        println!("=== Modmail ===\n");
+                        for (id, conv) in &response.conversations {
+                            println!("{} - {}", id, conv.subject);
+                            println!("   Participant: {}", conv.participant.as_ref().map(|p| p.name.clone()).unwrap_or_else(|| "Unknown".to_string()));
+                        }
+                    }
+                    ModmailCommands::Show { conversation_id } => {
+                        use crate::api::endpoints::ModmailEndpoint;
+                        let endpoint = ModmailEndpoint::new(&client);
+                        let response = endpoint.get(conversation_id).await?;
+
+                        println!("=== {} ===\n", response.conversation.subject);
+                        for (_, msg) in &response.messages {
+                            let time = chrono::DateTime::from_timestamp(msg.created_utc as i64, 0)
+                                .map(|d| d.to_rfc2822())
+                                .unwrap_or_else(|| "Unknown".to_string());
+                            println!("[{}] u/{}:", time, msg.author.name);
+                            println!("{}\n", msg.body);
+                        }
+                    }
+                    ModmailCommands::Reply { conversation_id, body, internal } => {
+                        use crate::api::endpoints::ModmailEndpoint;
+                        let endpoint = ModmailEndpoint::new(&client);
+                        endpoint.reply(conversation_id, body, *internal, false).await?;
+                        println!("Replied to modmail {}", conversation_id);
+                    }
+                    ModmailCommands::Create { subreddit, to, subject, body } => {
+                        use crate::api::endpoints::ModmailEndpoint;
+                        let endpoint = ModmailEndpoint::new(&client);
+                        endpoint.create(body, subject, subreddit, Some(to), None).await?;
+                        println!("Created modmail in r/{}", subreddit);
+                    }
+                    ModmailCommands::Archive { conversation_id } => {
+                        use crate::api::endpoints::ModmailEndpoint;
+                        let endpoint = ModmailEndpoint::new(&client);
+                        endpoint.archive(conversation_id).await?;
+                        println!("Archived modmail {}", conversation_id);
+                    }
+                    ModmailCommands::Highlight { conversation_id } => {
+                        use crate::api::endpoints::ModmailEndpoint;
+                        let endpoint = ModmailEndpoint::new(&client);
+                        endpoint.highlight(conversation_id).await?;
+                        println!("Highlighted modmail {}", conversation_id);
+                    }
+                    ModmailCommands::Mmute { conversation_id } => {
+                        use crate::api::endpoints::ModmailEndpoint;
+                        let endpoint = ModmailEndpoint::new(&client);
+                        endpoint.mute(conversation_id).await?;
+                        println!("Muted participant in modmail {}", conversation_id);
+                    }
+                }
+            }
+            Commands::Modnote(cmd) => {
+                match cmd {
+                    ModnoteCommands::Show { subreddit, user } => {
+                        use crate::api::endpoints::ModNoteEndpoint;
+                        let endpoint = ModNoteEndpoint::new(&client);
+                        let notes = endpoint.list(subreddit, user, Some(self.limit)).await?;
+
+                        println!("=== Mod Notes for u/{} in r/{} ===\n", user, subreddit);
+                        if notes.created_notes.is_empty() {
+                            println!("No notes found.");
+                        } else {
+                            for note in &notes.created_notes {
+                                let time = chrono::DateTime::from_timestamp(note.created_at as i64, 0)
+                                    .map(|d| d.to_rfc2822())
+                                    .unwrap_or_else(|| "Unknown".to_string());
+                                println!("[{}] u/{}:", time, note.operator.name);
+                                println!("   {}", note.note);
+                                if let Some(label) = &note.label {
+                                    println!("   Label: {}", label);
+                                }
+                            }
+                        }
+                    }
+                    ModnoteCommands::Add { subreddit, user, note, label } => {
+                        use crate::api::endpoints::{ModNoteEndpoint, ModNoteLabel};
+                        let endpoint = ModNoteEndpoint::new(&client);
+                        let label_enum = label.as_ref().and_then(|l| match l.to_uppercase().as_str() {
+                            "NOTE" => Some(ModNoteLabel::Note),
+                            "ABUSE" => Some(ModNoteLabel::Abuse),
+                            "BAN" => Some(ModNoteLabel::Ban),
+                            "HELPFUL" => Some(ModNoteLabel::Helpful),
+                            "SPAM" => Some(ModNoteLabel::Spam),
+                            _ => None,
+                        });
+                        endpoint.create(subreddit, user, note, label_enum).await?;
+                        println!("Added mod note for u/{} in r/{}", user, subreddit);
+                    }
+                    ModnoteCommands::Delete { subreddit, user, note_id } => {
+                        use crate::api::endpoints::ModNoteEndpoint;
+                        let endpoint = ModNoteEndpoint::new(&client);
+                        endpoint.delete(subreddit, user, note_id).await?;
+                        println!("Deleted mod note {} for u/{} in r/{}", note_id, user, subreddit);
                     }
                 }
             }
