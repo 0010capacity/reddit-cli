@@ -90,8 +90,6 @@ fn default_page_size() -> u32 {
 pub struct AuthSettings {
     #[serde(default)]
     pub client_id: Option<String>,
-    #[serde(default)]
-    pub client_secret: Option<String>,
     #[serde(default = "default_redirect_uri")]
     pub redirect_uri: String,
 }

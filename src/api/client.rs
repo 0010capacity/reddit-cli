@@ -303,7 +303,7 @@ impl Client {
 
             let settings = Settings::load()
                 .map_err(|e| RedditError::Config(format!("Failed to load settings: {}", e)))?;
-            let oauth = super::OAuthClient::new(&settings);
+            let oauth = super::OAuthClient::new(&settings)?;
             let new_token = oauth.refresh_token(&refresh_token).await?;
 
             Ok(new_token.access_token)

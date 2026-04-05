@@ -901,7 +901,7 @@ impl Cli {
             }
             Commands::Auth(cmd) => match cmd {
                 AuthCommands::Login => {
-                    let oauth = OAuthClient::new(&settings);
+                    let oauth = OAuthClient::new(&settings)?;
                     oauth.login().await?;
                 }
                 AuthCommands::Logout => {
@@ -931,7 +931,7 @@ impl Cli {
                     let refresh_token = token
                         .refresh_token
                         .ok_or_else(|| anyhow::anyhow!("No refresh token available"))?;
-                    let oauth = OAuthClient::new(&settings);
+                    let oauth = OAuthClient::new(&settings)?;
                     oauth.refresh_token(&refresh_token).await?;
                 }
             },
